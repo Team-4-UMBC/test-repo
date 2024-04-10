@@ -12,14 +12,32 @@ Clone the repo and open it in like vscode or something
 
 delete package-lock.json and run `npm install` in a terminal on the project
 
-#### Setup the venv
+if the venv file is there, DELETE IT IDK WHY IT KEEPS GETTING PAST THE GITIGNORE
+
+#### Setup the venv - windows
+
+Open up CMD terminal in project
 
 `cd api`
+
+`python -m venv venv`
+
+`venv\Scripts\activate`
+
+Jump to Install a thingy
+
+#### Setup the venv - linux
+
+`cd api`
+
+`python3 -m venv venv`
 
 `. venv/bin/activate`
 
 #### Install a thingy in the venv
 `pip install python-dotenv`
+
+`pip install flask`
 
 #### Running the backend
 I have set it up so that you can run flask from the main directory by running `yarn start-api`
