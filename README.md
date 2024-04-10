@@ -24,9 +24,14 @@ delete package-lock.json and run `npm install` in a terminal on the project
 #### Running the backend
 I have set it up so that you can run flask from the main directory by running `yarn start-api`
 
+Open up a new terminal and run `yarn start-api`
+
+**KEEP IT OPEN OR REACT WILL GIVE ERRORS SINCE IT IS CONNECTED**
+
 This should work on linux based computers, I haven't tested on windows. You can be either in the api directory or the main directory it should work either way. Otherwise just run `flask run` in the api directory.
 
 ### Running the frontend
+open up a new terminal in the project and run 
 `yarn start`
 
 ### If you don't know how to push and stuff watch this vid
