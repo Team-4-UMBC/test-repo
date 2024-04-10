@@ -10,7 +10,7 @@ Clone the repo and open it in like vscode or something
 
 ### After cloning:
 
-delete package-lock.json and run `npm install` in a terminal on the project
+`npm ci`
 
 if the venv file is there, DELETE IT IDK WHY IT KEEPS GETTING PAST THE GITIGNORE
 
