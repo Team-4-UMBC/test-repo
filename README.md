@@ -33,3 +33,6 @@ open up a new terminal in the project and run
 
 ### If you don't know how to push and stuff watch this vid
 https://www.youtube.com/watch?v=jT9QEUOX00w&t=1s - vscode only
+
+###
+You will need to download the dataset's archive folder and unzip it before running
