@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<title> recipe </title>
+<link rel="stylesheet" href="{{ url_for('static', filename='recipeStyle.css') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<div class="recipeInfo"> 
+<h1 class="recipeTitle"> {{ recipe.title }}</h1>
+
+<div class = "separate"></div>
+<div class ="attBox">
+<p class="recipeIng"> {{ recipe.ingredients }}</p>
+</div>
+<div class = "separate"></div>
+<p class="recipeInst"> {{ recipe.instructions }}</p>
+<div class = "separate"></div>
+<p class ="recipeDate"> {{ recipe.upload_date }}</p>
+<div class = "separate"></div>
+</div>
+{% endblock %}
