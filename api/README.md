@@ -15,6 +15,8 @@ That will give you the file path to where you should put the images
 
 
 NOTE:
+The code automatically populates the database with the recipes and images if the tables are empty so it may take a bit to run.
+
 For future reference, when retrieving title, ingredients, and instructions from the recipe table, they have to be reformatted. 
 Replace “||” with commas. Ingredients will have single quotes around them and each ingredient attribute will be enclosed by square brackets [], which we will need to remove to make the formatting look better. 
 
