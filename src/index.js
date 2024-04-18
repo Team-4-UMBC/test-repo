@@ -17,7 +17,7 @@ class Toolbar extends React.Component {
     return (
       <ul class = "Toolbar">
         <li class = "toolbar"style={{float : "left"}}><a class = "toolbar" href="#signup">Sign Up</a></li>
-        <li class = "toolbar"style={{float : "left"}}><a class = "toolbar" href="#login">Log In</a></li>
+        <li class = "toolbar"style={{float : "left"}}><a class = "login" href="#login">Log In</a></li>
         <li class = "toolbar"><a href="" style={{padding : 0,borderWidth:0}}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details">Account Details</a> </li>

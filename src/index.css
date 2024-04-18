@@ -38,6 +38,22 @@ li a.toolbar {
   border-radius: 10px;
 }
 
+li a.login {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 10px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  border-style: solid;
+  border-width:2px;
+  border-radius: 10px;
+}
+
+li a.login:hover {
+  background-color: #ffcc5f;
+}
+
 li a.toolbar:hover {
   background-color: #ffcc5f;
 }
