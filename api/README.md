@@ -7,6 +7,8 @@ For me, I already had my sql connection configured so that username = root and p
 
 You will need to have the recipe.csv file in the api directory. 
 Do not change the contents of recipe.csv!! I formatted it very specifically so that it could be uploaded to the database.
+You will need to go into the api.py code and change the filepaths to wherever recipe.csv can be located
+in your filesystem.
 
 You will need to copy the Food Images directory into this folder for Windows: C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/
 For windows, you can do this command in the terminal: xcopy yourfilepathtoFoodImagesDirectory C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/ /s /e /h
