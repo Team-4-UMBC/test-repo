@@ -13,6 +13,8 @@ For windows, you can do this command in the terminal: xcopy yourfilepathtoFoodIm
 If you are not on windows, log into mysql through the terminal and type this command: select @@secure_file_priv;
 That will give you the file path to where you should put the images
 
+Make sure to install the necessary packages/libraries that are listed in the top of the api.py code.
+Also, you have to install cryptography: pip install cryptography
 
 NOTE:
 The code automatically populates the database with the recipes and images if the tables are empty so it may take a bit to run.
