@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import Dropdown from './components/Dropdown/Dropdown';
 import "./index.css"
 
 
@@ -17,14 +18,14 @@ class Toolbar extends React.Component {
     return (
       <ul class = "Toolbar">
         <li class = "toolbar"style={{float : "left"}}><a class = "toolbar" href="#signup">Sign Up</a></li>
-        <li class = "toolbar"style={{float : "left"}}><a class = "login" href="#login">Log In</a></li>
+        <li class = "toolbar"style={{float : "left"}}>
+          <Dropdown buttonText="Log In " content = ""/>
+        </li>
         <li class = "toolbar"><a href="" style={{padding : 0,borderWidth:0}}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details">Account Details</a> </li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details" style={{float : "right", padding: "5 8", borderRadius:10}}><img src={require('./profile.png')} alt="Profile Pic" style={{width:"30", height:"30"}}/></a></li>
       </ul>
-      
-      
     );
   }
 }
