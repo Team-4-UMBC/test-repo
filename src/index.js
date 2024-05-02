@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dropdown from './components/Dropdown/Dropdown';
-import "./index.css"
-
+import "./index.css";
 
 
 class Toolbar extends React.Component {
@@ -34,94 +33,120 @@ class Toolbar extends React.Component {
 
 
 
-class Recipe_OTD extends React.Component {
-
-  constructor() {
-    super();
-  }
-
+function Recipe_OTD() {
   
+  //defines the data to be displayed and fetches it
+  const [dataRecipe, setData] = useState({
+    id: 0,
+    title: "",
+    description: "",
+    ingredients: "",
+    instructions: "",
+    user_name: "",
+    upload_date: "",
+    revised_date: "",
+    image_name: "",
+  });
+  const [dataImage, setDataImage] = useState();
+  useEffect(() => {
+      fetch("/recipe").then((res) => 
+      res.json().then((data) => {
+              setData({
+                id: data.id,
+                title: data.title,
+                description: data.description,
+                ingredients: data.ingredients,
+                instructions: data.instructions,
+                user_name: data.user_name,
+                upload_date: data.upload_date,
+                revised_date: data.revised_date,
+                image_name: data.image_name
+              });
+          })
+      );
+  }, []);
+  useEffect(() => {
+    fetch("/image").then((res) => 
+    res.blob().then((data1) => {
+            setDataImage(URL.createObjectURL(data1));
+        })
+    );
+}, []);
 
   //three text boxes and a button
-  render() {
-    return (
+  return (
       <div>
         <div class="margin">
           <h1>Recipe of the Day</h1>
         </div>
-        <div class="ROTD">
-          <img src={require("./archive/Food Images/Food Images/thanksgiving-mac-and-cheese-erick-williams.jpg")} alt="Missing Recipe Image" style = {{width:"274px", height: "169px", objectFit: "cover",display:"inline-block",borderRight:"solid",borderWidth:"2px"}}></img>
-          <h1 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,textDecoration:"underline"}}>Thanksgiving Mac and Cheese</h1>
+        <div className="ROTD">
+          <img src={dataImage} alt="Missing Recipe Image" style = {{width:"274px", height: "169px", objectFit: "cover",display:"inline-block",borderRight:"solid",borderWidth:"2px"}}></img>
+          <h2 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,textDecoration:"underline"}}>{dataRecipe.title}</h2>
+          
+          
           <h3 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,marginTop:45}}>Ingredients</h3>
-          <ul style={{ position:"absolute", display:"inline-block",marginTop:75,marginLeft:20}}>
-            <li>1 cup evaporated milk</li>
-            <li>1 cup whole milk</li>
-            <li>1 tsp. garlic powder</li>
-            <li>...</li>
+          <ul style={{ width: "200px", height: "90px", overflow: "hidden", position:"absolute", display:"inline-block",marginTop:75,marginLeft:20}}>
+            <li>{dataRecipe.ingredients}</li>
           </ul>
+          
           <h3 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:"20vw",marginTop:45}}>Instructions</h3>
-          <ul style={{ position:"absolute", display:"inline-block",marginTop:75,marginLeft:"20vw"}}>
-            <li>Place a rack in middle of oven; preheat to 400°.</li>
-            <li>Bring evaporated milk and whole milk to a bare simmer in a large saucepan over medium heat.</li>
-            <li>...</li>
+          <ul style={{ width: "200px", height: "90px", overflow: "hidden", position:"absolute", display:"inline-block",marginTop:75,marginLeft:"20vw"}}>
+            <li>{dataRecipe.instructions}</li>
           </ul>
         </div>
       </div>
       
     );
-  }
 }
 
 
-class SearchBar extends React.Component {
+function SearchBar() {
+  const [state, setState] = useState({
+    recipes: []
+  });
 
-  constructor() {
-    super();
-
-    this.state = {ID: ''};
-
-    this.update_ID = this.update_ID.bind(this);
-    this.submit = this.submit.bind(this)
-  }
-
-  update_ID(event) {
-    this.setState({ID: event.target.value});
-  }
-
-
-
-  submit(event) {
-    this.setState({ID: ''})
+  const submit = (event) => {
+      fetch("/search").then((res) => 
+      res.json().then((data) => {
+              setState({
+                recipes: data.recipes
+              });
+          })
+      );
     event.preventDefault();
   }
 
-  render() {
-    return (
-      <div class="search">
-      <div class="margin" style = {{marginTop:"10vh"}}>
-      </div>
-      <form onSubmit={this.submit}>
-        <h2 style = {{textDecoration: "underline", textDecorationColor: "#fdb515"}}>
-        Not feeling the recipe of the day? Search for another delicious recipe!
-        </h2>
-        <label>
-          <input class = "searchbar" type="text" value={this.state.ID} onChange={this.update_ID} />
-        </label>
-        <input class="coolbutton" type="submit" value="Search" />
-      </form>
-      <h3 style={{display: "inline-block"}}>I am ...</h3>
-      <form onSubmit={this.vegetarian} style = {{display: "inline-block"}}>
-        <input class= "lesscoolbutton" style={{backgroundColor:"#74C365"}} type="submit" value="Vegetarian" />
-      </form>
-      <form onSubmit={this.vegan} style = {{display: "inline-block"}}>
-        <input class= "lesscoolbutton" style={{backgroundColor:"#F85050"}} type="submit" value="Vegan" />
-      </form>
-      <form onSubmit={this.glutenFree} style = {{display: "inline-block"}}>
-        <input class= "lesscoolbutton" style={{backgroundColor:"#EFCCA2"}} type="submit" value="Gluten Free" />
-      </form>
-      </div>
-    );
-  }
+  return (
+    <div class="search">
+    <div class="margin" style = {{marginTop:"10vh"}}>
+    </div>
+    <form onSubmit={submit}>
+      <h2 style = {{textDecoration: "underline", textDecorationColor: "#fdb515"}}>
+      Not feeling the recipe of the day? Search for another delicious recipe!
+      </h2>
+      <label>
+        <input class = "searchbar" type="text"/>
+      </label>
+      <input class="coolbutton" type="submit" value="Search" />
+      {(typeof state.recipes == 'undefined') ? (
+        <p>Loading...</p>
+        ) : (
+        state.recipes.map((recipe, i) => (
+          <p style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-10,marginLeft:5}} key={i}>{recipe.title}</p>
+      )))}
+    </form>
+    <h3 style={{display: "inline-block"}}>I am ...</h3>
+    <form onSubmit={this.vegetarian} style = {{display: "inline-block"}}>
+      <input class= "lesscoolbutton" style={{backgroundColor:"#74C365"}} type="submit" value="Vegetarian" />
+    </form>
+    <form onSubmit={this.vegan} style = {{display: "inline-block"}}>
+      <input class= "lesscoolbutton" style={{backgroundColor:"#F85050"}} type="submit" value="Vegan" />
+    </form>
+    <form onSubmit={this.glutenFree} style = {{display: "inline-block"}}>
+      <input class= "lesscoolbutton" style={{backgroundColor:"#EFCCA2"}} type="submit" value="Gluten Free" />
+    </form>
+    </div>
+  );
 }
 
 
@@ -164,5 +189,3 @@ const Search = ReactDOM.createRoot(document.getElementById('SearchBar'));
 Search.render(<SearchBar />);
 const IOTD = ReactDOM.createRoot(document.getElementById('IOTD'));
 IOTD.render(<Ingredient_OTD />);
-
-
