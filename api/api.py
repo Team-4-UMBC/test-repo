@@ -26,12 +26,12 @@ passwd = "123456"
 es = Elasticsearch(['https://localhost:9200'], verify_certs=False, http_auth=(usrname, passwd))
 
 #database set up
-engine = create_engine('mysql+pymysql://root:root@127.0.0.1:3306')
+engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306')
 statement1 = text("CREATE DATABASE IF NOT EXISTS website1;")
 with engine.connect() as conn:
     conn.execute(statement1)
 engine.dispose()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@127.0.0.1:3306/website1'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:chicken@127.0.0.1:3306/website1'
 db = SQLAlchemy(app)
 app.app_context().push() 
 
@@ -66,6 +66,7 @@ class Recipe(db.Model):
     upload_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now(timezone.utc))
     revised_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.now(timezone.utc))
     image_name = db.Column(db.String(500), db.ForeignKey('image.image_name'), nullable=True)
+    #image_name = db.Column(db.String(500), nullable=True)
     user_name = db.Column(db.String(20), db.ForeignKey('user.username'), nullable=True)
     ingredients = db.Column(LONGTEXT, nullable=False)
     instructions = db.Column(LONGTEXT, nullable=False)
@@ -85,7 +86,7 @@ db.session.commit()
 
 #checks if the user table is empty
 userExists = True
-engine = create_engine('mysql+pymysql://root:root@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM user;"))
     if '0' in str(set(result)):
@@ -99,7 +100,7 @@ if userExists == False:
 
 #checks if the image table is empty
 imageExists = True
-engine = create_engine('mysql+pymysql://root:root@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM image;"))
     if '(0,)' in str(set(result)):
@@ -119,7 +120,7 @@ engine.dispose()
 
 #checks if the recipe table is empty
 recipeExists = True
-engine = create_engine('mysql+pymysql://root:root@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM recipe;"))
     if '(0,)' in str(set(result)):
@@ -129,7 +130,7 @@ engine.dispose()
 
 #populates the recipe table with recipes from the dataset if it is empty
 if recipeExists == False:
-    engine = create_engine('mysql+pymysql://root:root@127.0.0.1:3306/website1?local_infile=1')
+    engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1?local_infile=1')
     with engine.connect() as conn:
         #REPLACE FILE PATH WITH YOUR FILE PATH TO recipe.csv
         result = conn.execute(text("LOAD DATA LOCAL INFILE '/Users/miche/Documents/Spring 24/Cmsc 447/test-repo/api/recipe.csv' INTO TABLE recipe FIELDS TERMINATED BY ',' ENCLOSED BY '`' LINES TERMINATED BY '\n';"))
@@ -141,14 +142,12 @@ index_name = 'recipe_index'
 if not es.indices.exists(index=index_name):
     es.indices.create(index=index_name)
 
-@app.route('/addToEs')
 def addToEs():
     with app.app_context():
         recipes = Recipe.query.all()
         for recipe in recipes:
             es.index(index=index_name, id=recipe.id, body= {'ingredients': recipe.ingredients, 'instructions': recipe.instructions, 'upload_date': recipe.upload_date, 'revised_date': recipe.revised_date, 'title': recipe.title, 'description': recipe.description, 'user_name': recipe.user_name, 'image_name': recipe.image_name})
 addToEs()
-
 
 def insert_user(username1, password1, email1, privilege1):
     hashedPass = sha256(password1.encode('utf-8')).hexdigest()
@@ -186,12 +185,12 @@ def insert_image(image_name1, image_data1):
     db.session.add(image)
     db.session.commit()
 
-def delete_recipe(id1):
-    Recipe.query.filter_by(id=id1).delete()
-    db.session.commit()
-
 def delete_image(image_name1):
     Image.query.filter_by(image_name=image_name1).delete()
+    db.session.commit()
+
+def delete_recipe(id1):
+    Recipe.query.filter_by(id=id1).delete()
     db.session.commit()
 
 def update_title(id1, title1):
@@ -214,14 +213,14 @@ def update_revisedDate(id1, revisedDate1):
     Recipe.query.filter_by(id=id1).revisedDate = revisedDate1
     db.session.commit()
 
-def update_imageName(id1, image_name1, image_name2):
-    Image.query.filter_by(image_name=image_name1).image_name = image_name2
-    Recipe.query.filter_by(id=id1).image_name = image_name2
+def update_imageName(id1, image_name1):
+    Recipe.query.filter_by(id=id1).image_name = image_name1
     db.session.commit()
 
 def update_image(image_data1, image_name1):
     Image.query.filter_by(image_name=image_name1).image_data = image_data1
     db.session.commit()
+
 
 @app.route("/")
 def home():
@@ -242,7 +241,7 @@ def search():
         }
         search_results = es.search(index='recipe_index', body=search_body)
         recipes = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
-        return recipes
+        return jsonify({"search" : recipes})
 
 #app route that deals with the insertion of a user
 @app.route("/create_user", methods = ['POST'])
@@ -308,10 +307,10 @@ def uploadRecipe():
     ingredients = request.json['ingredients']
     instructions = request.json['instructions']
     image_name = request.json['image_name']
-    image_data = request.json['image_data']
+    #image_data = request.json['image_data']
     user_name = request.json['user_name']
     insert_recipe(id, title, description, datetime.datetime.now(timezone.utc), datetime.datetime.now(timezone.utc), image_name, user_name, ingredients, instructions)
-    insert_image(image_name, image_data)
+    #insert_image(image_name, image_data)
 
 #app route that deals with the deletion of a recipe
 @app.route("/delete_recipe", methods = ['POST'])
@@ -320,7 +319,7 @@ def deleteRecipe():
     id = request.json['id']
     image = Recipe.query.get(id).image_name
     delete_recipe(id)
-    delete_image(image)
+    #delete_image(image)
 
 #app route that edits recipe title
 @app.route("/edit_title", methods = ['POST'])
@@ -378,17 +377,34 @@ def editImageData():
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
 #app route that displays a specific recipe
-@app.route("/recipe/<int:recipe_id>", methods = ['GET', 'POST'])
+@app.route("/recipe", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayRecipe():
-    id = request.json['id']
-    return Recipe.query.get(id)
+    #id = request.json['id']
+    #return Recipe.query.get(id)
+    recipe = Recipe.query.get(2)
+    ingredients = recipe.ingredients.replace("'|| '", ", ").replace("\"`['", "").replace("']`\"", "").replace("`", "")
+    ingredients = ingredients.replace("||", ",")
+    instructions = recipe.instructions.replace("||", ",").replace("\"`", "").replace("`\"", "")
+    return {"id": recipe.id, "title": recipe.title, "description": recipe.description, "ingredients": ingredients, "instructions": instructions, "username": recipe.user_name, "upload_date": recipe.upload_date, "revised_date": recipe.revised_date, "image_name": recipe.image_name}
+#/<int:recipe_id>
+
+#app route that displays a specific image
+@app.route("/image", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def displayImage():
+    #id = request.json['id']
+    #return Recipe.query.get(id)
+    #image = Image.query.get(Recipe.query.get(2).image_name)
+    #return jsonify({"image_name": image.image_name, "image_data": image.data})
+    return Image.query.get(Recipe.query.get(2).image_name).data
 
 #app route that displays all recipes
 @app.route("/display_recipes", methods = ['GET'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayRecipes():
-    return Recipe.query.all()
+    recipe = Recipe.query.all()
+    return jsonify({"recipes": recipe})
 
 @app.route('/api/time')
 def get_curr_time():
