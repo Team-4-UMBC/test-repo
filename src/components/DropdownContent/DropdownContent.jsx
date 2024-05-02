@@ -1,18 +1,52 @@
 import "./DropdownContent.css";
+import { useState } from "react";
 
+/**
+ * THIS COMPONENT HANDLES THE LOGIN INPUT
+ * If you want to grab any individual inputs, I have it so that the entered username is stored in username, and the entered password is stored in password
+ * PLEASE DO ANY FETCHES/POSTS/WHATEVER IN handleSubmit
+ * The username and password are saved once you click the log in button
+ */
 const DropdownContent = ({children, open}) => {
-    return (
-        
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const account = { username, password };
+        
+        /*fetch('PUT API HERE', {
+            method: 'POST',
+        })
+        */
+    }
+    return (
+        //This div collects the inputs.
         <div className={`dropdown-content 
             ${open ? "content-open" : null}`}>
             {children} 
-            <label className="input-content">
-                Username: <input name="username" />
-            </label>
-            <label className="input-content">
-                Password: <input name="password" />
-            </label>
+            <form onSubmit={handleSubmit}>
+                <label className="input-content"> Username: 
+                         <input 
+                            type="text"
+                            required
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            />
+                    </label>
+                <label className="input-content">
+                    Password: 
+                        <input 
+                            type="text"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            />
+                    </label>
+                <br/>
+                <button type="submit">Log In
+                </button>
+            </form>
         </div>
     );
 }
