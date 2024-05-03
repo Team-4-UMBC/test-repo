@@ -10,15 +10,16 @@ import { useState } from "react";
 const DropdownCreateContent = ({children, open}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const account = { username, password };
+        const account = { username, password, email };
         
         /**
          * This fetch needs to check if a username is already in the database, if it is, DO NOT let them create the account, otherwise just add it to the database.
          */
-        
+
         /*fetch('PUT API HERE', {
             method: 'POST',
         })
@@ -45,6 +46,15 @@ const DropdownCreateContent = ({children, open}) => {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            />
+                    </label>
+                <label className="input-content">
+                    Email:
+                        <input 
+                            type="text"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             />
                     </label>
                 <br/>
