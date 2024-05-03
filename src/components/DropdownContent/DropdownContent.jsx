@@ -10,15 +10,16 @@ import { useState } from "react";
 const DropdownContent = ({children, open}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const account = { username, password };
+        const account = { username, password, email };
         
         /**
          * This fetch needs to check if the username and password matches anything in our database, if it does NOT, then do not login.
          */
-        
+
         /*fetch('PUT API HERE', {
             method: 'POST',
         })
@@ -45,6 +46,15 @@ const DropdownContent = ({children, open}) => {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            />
+                    </label>
+                <label className="input-content">
+                    Email:
+                        <input 
+                            type="text"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             />
                     </label>
                 <br/>
