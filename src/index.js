@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Dropdown from './components/Dropdown/Dropdown';
+import DropdownCreate from './components/Dropdown/DropdownCreate';
 import "./index.css"
 
 
@@ -18,6 +19,9 @@ class Toolbar extends React.Component {
     return (
       <ul class = "Toolbar">
         <li class = "toolbar"style={{float : "left"}}><a class = "toolbar" href="#signup">Sign Up</a></li>
+        <li class = "toolbar"style={{float : "left"}}>
+          <DropdownCreate buttonText="Create Account " content = ""/>
+        </li>
         <li class = "toolbar"style={{float : "left"}}>
           <Dropdown buttonText="Log In " content = ""/>
         </li>
@@ -46,7 +50,7 @@ class Recipe_OTD extends React.Component {
   render() {
     return (
       <div>
-        <div class="margin">
+        <div className="margin">
           <h1>Recipe of the Day</h1>
         </div>
         <div class="ROTD">
@@ -97,27 +101,27 @@ class SearchBar extends React.Component {
 
   render() {
     return (
-      <div class="search">
-      <div class="margin" style = {{marginTop:"10vh"}}>
+      <div className="search">
+      <div className="margin" style = {{marginTop:"10vh"}}>
       </div>
       <form onSubmit={this.submit}>
         <h2 style = {{textDecoration: "underline", textDecorationColor: "#fdb515"}}>
         Not feeling the recipe of the day? Search for another delicious recipe!
         </h2>
         <label>
-          <input class = "searchbar" type="text" value={this.state.ID} onChange={this.update_ID} />
+          <input className = "searchbar" type="text" value={this.state.ID} onChange={this.update_ID} />
         </label>
-        <input class="coolbutton" type="submit" value="Search" />
+        <input className="coolbutton" type="submit" value="Search" />
       </form>
       <h3 style={{display: "inline-block"}}>I am ...</h3>
       <form onSubmit={this.vegetarian} style = {{display: "inline-block"}}>
-        <input class= "lesscoolbutton" style={{backgroundColor:"#74C365"}} type="submit" value="Vegetarian" />
+        <input className= "lesscoolbutton" style={{backgroundColor:"#74C365"}} type="submit" value="Vegetarian" />
       </form>
       <form onSubmit={this.vegan} style = {{display: "inline-block"}}>
-        <input class= "lesscoolbutton" style={{backgroundColor:"#F85050"}} type="submit" value="Vegan" />
+        <input className= "lesscoolbutton" style={{backgroundColor:"#F85050"}} type="submit" value="Vegan" />
       </form>
       <form onSubmit={this.glutenFree} style = {{display: "inline-block"}}>
-        <input class= "lesscoolbutton" style={{backgroundColor:"#EFCCA2"}} type="submit" value="Gluten Free" />
+        <input className= "lesscoolbutton" style={{backgroundColor:"#EFCCA2"}} type="submit" value="Gluten Free" />
       </form>
       </div>
     );
@@ -137,13 +141,13 @@ class Ingredient_OTD extends React.Component {
   render() {
     return (
       <div>
-        <div class="margin" style = {{marginTop:"15vh"}}>
+        <div className="margin" style = {{marginTop:"15vh"}}>
           <h2 style={{textDecoration: "underline"}}>Ingredient of the Day</h2>
         </div>
-        <div class="IOTD">
+        <div className="IOTD">
           <h3 style={{textDecoration: "underline", textDecorationColor: "#fdb515", display: "inline-block"}}>Chicken!</h3>
           <form onSubmit={this.Ingredient} style = {{display: "inline-block"}}>
-            <input class= "lesscoolbutton" type="submit" value="Search for recipes with Chicken!" />
+            <input className= "lesscoolbutton" type="submit" value="Search for recipes with Chicken!" />
           </form>
         </div>
       </div>

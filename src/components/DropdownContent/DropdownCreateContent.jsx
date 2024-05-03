@@ -2,12 +2,12 @@ import "./DropdownContent.css";
 import { useState } from "react";
 
 /**
- * THIS COMPONENT HANDLES THE LOGIN INPUT
+ * THIS COMPONENT HANDLES THE CREATE ACCOUNT INPUT
  * If you want to grab any individual inputs, I have it so that the entered username is stored in username, and the entered password is stored in password
  * PLEASE DO ANY FETCHES/POSTS/WHATEVER IN handleSubmit
  * The username and password are saved once you click the log in button
  */
-const DropdownContent = ({children, open}) => {
+const DropdownCreateContent = ({children, open}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -16,7 +16,7 @@ const DropdownContent = ({children, open}) => {
         const account = { username, password };
         
         /**
-         * This fetch needs to check if the username and password matches anything in our database, if it does NOT, then do not login.
+         * This fetch needs to check if a username is already in the database, if it is, DO NOT let them create the account, otherwise just add it to the database.
          */
         
         /*fetch('PUT API HERE', {
@@ -48,11 +48,11 @@ const DropdownContent = ({children, open}) => {
                             />
                     </label>
                 <br/>
-                <button type="submit">Log In
+                <button type="submit">Create Account
                 </button>
             </form>
         </div>
     );
 }
 
-export default DropdownContent;
+export default DropdownCreateContent;
