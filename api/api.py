@@ -20,11 +20,12 @@ cors = CORS(app, support_credentials=True)
 app.config['CORS_HEADERS'] = 'application/json'
 app.config['SECRET_KEY'] = '85533925b02f5917db2256d316b3b314'
 
+"""
 #search set up
 usrname = "elastic"
 passwd = "123456"
 es = Elasticsearch(['https://localhost:9200'], verify_certs=False, http_auth=(usrname, passwd))
-
+"""
 #database set up
 engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306')
 statement1 = text("CREATE DATABASE IF NOT EXISTS website1;")
@@ -138,7 +139,7 @@ if recipeExists == False:
     engine.dispose()
 print("Database populated")
 
-index_name = 'recipe_index'
+"""index_name = 'recipe_index'
 if not es.indices.exists(index=index_name):
     es.indices.create(index=index_name)
 
@@ -147,7 +148,7 @@ def addToEs():
         recipes = Recipe.query.all()
         for recipe in recipes:
             es.index(index=index_name, id=recipe.id, body= {'ingredients': recipe.ingredients, 'instructions': recipe.instructions, 'upload_date': recipe.upload_date, 'revised_date': recipe.revised_date, 'title': recipe.title, 'description': recipe.description, 'user_name': recipe.user_name, 'image_name': recipe.image_name})
-addToEs()
+addToEs()"""
 
 def insert_user(username1, password1, email1, privilege1):
     hashedPass = sha256(password1.encode('utf-8')).hexdigest()
@@ -226,6 +227,7 @@ def update_image(image_data1, image_name1):
 def home():
     return 
 
+"""
 @app.route('/search', methods = ['GET'])
 def search():
     search_query = request.args.get('search_query', '')
@@ -242,16 +244,21 @@ def search():
         search_results = es.search(index='recipe_index', body=search_body)
         recipes = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
         return jsonify({"search" : recipes})
+"""
 
 #app route that deals with the insertion of a user
-@app.route("/create_user", methods = ['POST'])
+@app.route("/create_user", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def createUser():
     username = request.json['username']
     password = request.json['password']
     email = request.json['email']
-    privilege = request.json['privilege']
-    insert_user(username, password, email, privilege)
+
+    if User.query.get(username) == None:
+        insert_user(username, password, email, 0)
+        return {"status": 1}
+    else:
+        return {"status": 0}
 
 #app route that deals with the deletion of a user
 @app.route("/delete_user", methods = ['POST'])
@@ -260,42 +267,68 @@ def deleteUser():
     username = request.json['username']
     delete_user(username)
 
+#app route that deals with user login
+@app.route("/login", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def login():
+    username = request.json['username']
+    password = request.json['password']
+    password = sha256(password.encode('utf-8')).hexdigest()
+    account = User.query.get(username).password
+    if account == password:
+        return {"status": 1}
+    else:
+        return {"status": 0}
+
 #app route that deals with editing a user's username
-@app.route("/edit_username", methods = ['POST'])
+@app.route("/edit_username", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editUsername():
-    username = request.json['username']
-    update_username(username)
+    username1 = request.json['username']
+    username = request.json['newUsername']
+    if username != None and User.query.get(username) == None and User.query.get(username1) != None:
+        update_username(username1, username)
+        return {"status": 1}
+    else:
+        return {"status": 0}
 
 #app route that deals with editing a user's password
-@app.route("/edit_password", methods = ['POST'])
+@app.route("/edit_password", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editPassword():
     username = request.json['username']
-    password = request.json['password']
-    update_password(username, password)
+    password = request.json['newPassword']
+    if username != None and password != None and User.query.get(username) != None:
+        update_password(username, password)
+        return {"status": 1}
+    else:
+        return {"status": 0}
 
 #app route that deals with editing a user's email
-@app.route("/edit_email", methods = ['POST'])
+@app.route("/edit_email", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editEmail():
     username = request.json['username']
-    email = request.json['email']
-    update_email(username, email)
+    email = request.json['newEmail']
+    if username != None and email != None and User.query.get(username) != None:
+        update_email(username, email)
+        return {"status": 1}
+    else:
+        return {"status": 0}
 
 #app route that deals with displaying a user's username
 @app.route("/display_username", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayUsername():
     username = request.json['username']
-    return User.query.get(username).username
+    return {"username": User.query.get(username).username}
 
 #app route that deals with displaying a user's email
 @app.route("/display_email", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayEmail():
     username = request.json['username']
-    return User.query.get(username).email
+    return {"email": User.query.get(username).email}
 
 #app route that deals with the upload of a recipe
 @app.route("/upload_recipe", methods = ['POST'])
@@ -397,6 +430,23 @@ def displayImage():
     #return Recipe.query.get(id)
     #image = Image.query.get(Recipe.query.get(2).image_name)
     #return jsonify({"image_name": image.image_name, "image_data": image.data})
+    return Image.query.get(Recipe.query.get(2).image_name).data
+
+#app route that displays the recipe of the day
+@app.route("/recipeOTD", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def displayRecipeOTD():
+    recipe = Recipe.query.get(2)
+    ingredients = recipe.ingredients.replace("'|| '", ", ").replace("\"`['", "").replace("']`\"", "").replace("`", "")
+    ingredients = ingredients.replace("||", ",")
+    instructions = recipe.instructions.replace("||", ",").replace("\"`", "").replace("`\"", "")
+    return {"id": recipe.id, "title": recipe.title, "description": recipe.description, "ingredients": ingredients, "instructions": instructions, "username": recipe.user_name, "upload_date": recipe.upload_date, "revised_date": recipe.revised_date, "image_name": recipe.image_name}
+#/<int:recipe_id>
+
+#app route that displays the image for the recipe of the day
+@app.route("/imageOTD", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def displayImageOTD():
     return Image.query.get(Recipe.query.get(2).image_name).data
 
 #app route that displays all recipes
