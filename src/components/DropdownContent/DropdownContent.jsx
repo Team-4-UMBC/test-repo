@@ -1,5 +1,6 @@
 import "./DropdownContent.css";
 import { useState } from "react";
+import {TextInput} from 'react-native';
 
 /**
  * THIS COMPONENT HANDLES THE LOGIN INPUT
@@ -10,7 +11,6 @@ import { useState } from "react";
 const DropdownContent = ({children, open}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -20,12 +20,28 @@ const DropdownContent = ({children, open}) => {
          * This fetch needs to check if the username and password matches anything in our database, if it does NOT, then do not login.
          */
 
-        /*fetch('PUT API HERE', {
+        fetch('http://localhost:5000/login', {
             method: 'POST',
+            mode: 'cors',
+            headers: {
+            Accept: 'application/json',
+            'Content-Type': "application/json"
+            },
+            body: JSON.stringify(account),
         })
-        */
+        .then(response => response.json())
+        .then(data1 => {
+            if (data1.status === 1){
+                alert("Login successful")
+            }
+            else {
+                alert("Login failed")
+            }
+        })
     }
-    return (
+
+    return (       
+
         //This div collects the inputs.
         <div className={`dropdown-content 
             ${open ? "content-open" : null}`}>
@@ -41,8 +57,10 @@ const DropdownContent = ({children, open}) => {
                     </label>
                 <label className="input-content">
                     Password: 
-                        <input 
+                        <TextInput 
                             type="text"
+                            style={{borderColor: 'gray', borderWidth: 1}}
+                            secureTextEntry={true}
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
