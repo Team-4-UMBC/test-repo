@@ -1,5 +1,6 @@
 import "./DropdownContent.css";
 import { useState } from "react";
+import {TextInput} from 'react-native';
 
 /**
  * THIS COMPONENT HANDLES THE CREATE ACCOUNT INPUT
@@ -19,11 +20,29 @@ const DropdownCreateContent = ({children, open}) => {
         /**
          * This fetch needs to check if a username is already in the database, if it is, DO NOT let them create the account, otherwise just add it to the database.
          */
-
-        /*fetch('PUT API HERE', {
-            method: 'POST',
-        })
-        */
+        if(account.username.length <= 20 && account.username.length > 0 && account.email.length <= 30 && account.email.length > 0 && account.password.length <= 100 && account.password.length > 0 && account.email.includes("@") && account.email.includes(".")) {
+            fetch('http://localhost:5000/create_user', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                Accept: 'application/json',
+                'Content-Type': "application/json"
+                },
+                body: JSON.stringify(account),
+            })
+            .then(response => response.json())
+            .then(data1 => {
+                if (data1.status === 1){
+                    alert("Account created")
+                }
+                else {
+                    alert("Account not created")
+                }
+            })
+        }
+        else {
+            alert("Invalid input")
+        }
     }
     return (
         //This div collects the inputs.
@@ -41,8 +60,10 @@ const DropdownCreateContent = ({children, open}) => {
                     </label>
                 <label className="input-content">
                     Password: 
-                        <input 
+                        <TextInput 
                             type="text"
+                            style={{borderColor: 'gray', borderWidth: 1}}
+                            secureTextEntry={true}
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
