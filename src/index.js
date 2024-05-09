@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dropdown from './components/Dropdown/Dropdown';
 import DropdownCreate from './components/Dropdown/DropdownCreate';
+import Upload from './pages/upload/upload';
 import "./index.css";
 import {
   createBrowserRouter,
@@ -23,18 +24,23 @@ export class Toolbar extends React.Component {
   //three text boxes and a button
   render() {
     return (
-      <ul class = "Toolbar">
-        <li class = "toolbar"style={{float : "left"}}>
-          <DropdownCreate buttonText="Sign Up " content = ""/>
-        </li>
-        <li class = "toolbar"style={{float : "left"}}>
-          <Dropdown buttonText="Log In " content = ""/>
-        </li>
-        <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth:0}}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
-        <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li>
-        <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details">Account Details</a> </li>
-        <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details" style={{float : "right", padding: "5 8", borderRadius:10}}><img src={require('./profile.png')} alt="Profile Pic" style={{width:"30", height:"30"}}/></a></li>
-      </ul>
+        <ul class = "Toolbar">
+          <li class = "toolbar"style={{float : "left"}}>
+            <DropdownCreate buttonText="Sign Up " content = ""/>
+          </li>
+          <li class = "toolbar"style={{float : "left"}}>
+            <Dropdown buttonText="Log In " content = ""/>
+          </li>
+          <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth : 0, float : "" }}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
+          <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li>
+          <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes"> Upload Recipe </a> </li>
+          <li class = "toolbar" style={{float : "right"}}>
+            <Link to='/upload' class="toolbar">
+              Test
+            </Link>
+          </li>
+          <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details">Account Details</a> </li>
+        </ul>
     );
   }
 }
@@ -201,6 +207,10 @@ const router = createBrowserRouter([
   {
     path: "recipe",
     element: <><Toolbar/><Recipe/></>,
+  },
+  {
+    path: "upload",
+    element: <><Toolbar/><Upload/></>
   },
 ]);
 
