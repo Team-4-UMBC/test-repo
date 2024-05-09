@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dropdown from './components/Dropdown/Dropdown';
 import "./index.css";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Search from "./pages/search.js"
+import {Link, useNavigate} from 'react-router-dom';
 
 
-class Toolbar extends React.Component {
+export class Toolbar extends React.Component {
 
   constructor() {
     super();
@@ -20,7 +26,7 @@ class Toolbar extends React.Component {
         <li class = "toolbar"style={{float : "left"}}>
           <Dropdown buttonText="Log In " content = ""/>
         </li>
-        <li class = "toolbar"><a href="" style={{padding : 0,borderWidth:0}}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
+        <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth:0}}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details">Account Details</a> </li>
         <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details" style={{float : "right", padding: "5 8", borderRadius:10}}><img src={require('./profile.png')} alt="Profile Pic" style={{width:"30", height:"30"}}/></a></li>
@@ -33,7 +39,7 @@ class Toolbar extends React.Component {
 
 
 
-function Recipe_OTD() {
+export function Recipe_OTD() {
 
   //defines the data to be displayed and fetches it
   const [dataRecipe, setData] = useState({
@@ -100,21 +106,33 @@ function Recipe_OTD() {
 }
 
 
-function SearchBar() {
+export function SearchBar() {
   const [state, setState] = useState({
     recipes: []
   });
 
+  const navigate = useNavigate();
+
   const submit = (event) => {
-      fetch("/search").then((res) => 
-      res.json().then((data) => {
+      fetch("/search", {method:"POST", headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      }, body: JSON.stringify(document.getElementById("RecipeSearch").value)}).then(res => res.json().then(
+        (data) => {
               setState({
-                recipes: data.recipes
+                recipes: data.search
               });
-          })
-      );
-    event.preventDefault();
+              navigate('/search',{"state":{"recipes":data.search}});
+              //toSearch();
+          }));
+      event.preventDefault();
   }
+
+
+  
+  //const toSearch=()=>{
+    //navigate('/search',{"state":{"recipes":state.recipes}});
+      //}
 
   return (
     <div class="search">
@@ -125,7 +143,7 @@ function SearchBar() {
       Not feeling the recipe of the day? Search for another delicious recipe!
       </h2>
       <label>
-        <input class = "searchbar" type="text"/>
+        <input class = "searchbar" type="text" id = "RecipeSearch"/>
       </label>
       <input class="coolbutton" type="submit" value="Search" />
     </form>
@@ -133,14 +151,14 @@ function SearchBar() {
         <p>Loading...</p>
         ) : (
         state.recipes.map((recipe, i) => (
-          <p style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-10,marginLeft:5}} key={i}>{recipe.title}</p>
+          <p style = {{width:"30vw", height: "169px"}} key={i}>{recipe.title}</p>
     )))}
     </div>
   );
 }
 
 
-class Ingredient_OTD extends React.Component {
+export class Ingredient_OTD extends React.Component {
 
   constructor() {
     super();
@@ -167,10 +185,21 @@ class Ingredient_OTD extends React.Component {
   }
 }
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <><Toolbar/><Recipe_OTD/><SearchBar/><Ingredient_OTD/></>,
+  },
+  {
+    path: "search",
+    element: <><Toolbar/><Search/></>,
+  },
+]);
 
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(<RouterProvider router={router} />);
 
-
-//render all of the DOM elements created
+/*
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Toolbar />);
 const ROTD = ReactDOM.createRoot(document.getElementById('ROTD'));
@@ -178,7 +207,10 @@ ROTD.render(<Recipe_OTD />);
 const Search = ReactDOM.createRoot(document.getElementById('SearchBar'));
 Search.render(<SearchBar />);
 const IOTD = ReactDOM.createRoot(document.getElementById('IOTD'));
-IOTD.render(<Ingredient_OTD />);
+IOTD.render(<Ingredient_OTD />);*/
+
+//render all of the DOM elements created
+
 
 /*import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';

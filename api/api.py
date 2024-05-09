@@ -20,19 +20,19 @@ cors = CORS(app, support_credentials=True)
 app.config['CORS_HEADERS'] = 'application/json'
 app.config['SECRET_KEY'] = '85533925b02f5917db2256d316b3b314'
 
-"""
+
 #search set up
 usrname = "elastic"
 passwd = "123456"
 es = Elasticsearch(['https://localhost:9200'], verify_certs=False, http_auth=(usrname, passwd))
-"""
+
 #database set up
-engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306')
+engine = create_engine('mysql+pymysql://root:password@localhost')
 statement1 = text("CREATE DATABASE IF NOT EXISTS website1;")
 with engine.connect() as conn:
     conn.execute(statement1)
 engine.dispose()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:chicken@127.0.0.1:3306/website1'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/website1'
 db = SQLAlchemy(app)
 app.app_context().push() 
 
@@ -87,7 +87,7 @@ db.session.commit()
 
 #checks if the user table is empty
 userExists = True
-engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:password@localhost/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM user;"))
     if '0' in str(set(result)):
@@ -101,7 +101,7 @@ if userExists == False:
 
 #checks if the image table is empty
 imageExists = True
-engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:password@localhost/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM image;"))
     if '(0,)' in str(set(result)):
@@ -121,7 +121,7 @@ engine.dispose()
 
 #checks if the recipe table is empty
 recipeExists = True
-engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:password@localhost/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM recipe;"))
     if '(0,)' in str(set(result)):
@@ -131,7 +131,7 @@ engine.dispose()
 
 #populates the recipe table with recipes from the dataset if it is empty
 if recipeExists == False:
-    engine = create_engine('mysql+pymysql://root:chicken@127.0.0.1:3306/website1?local_infile=1')
+    engine = create_engine('mysql+pymysql://root:password@localhost/website1?local_infile=1')
     with engine.connect() as conn:
         #REPLACE FILE PATH WITH YOUR FILE PATH TO recipe.csv
         result = conn.execute(text("LOAD DATA LOCAL INFILE '/Users/miche/Documents/Spring 24/Cmsc 447/test-repo/api/recipe.csv' INTO TABLE recipe FIELDS TERMINATED BY ',' ENCLOSED BY '`' LINES TERMINATED BY '\n';"))
@@ -139,16 +139,24 @@ if recipeExists == False:
     engine.dispose()
 print("Database populated")
 
-"""index_name = 'recipe_index'
+index_name = 'recipe_index'
 if not es.indices.exists(index=index_name):
     es.indices.create(index=index_name)
 
 def addToEs():
     with app.app_context():
         recipes = Recipe.query.all()
+        i= 1
         for recipe in recipes:
-            es.index(index=index_name, id=recipe.id, body= {'ingredients': recipe.ingredients, 'instructions': recipe.instructions, 'upload_date': recipe.upload_date, 'revised_date': recipe.revised_date, 'title': recipe.title, 'description': recipe.description, 'user_name': recipe.user_name, 'image_name': recipe.image_name})
-addToEs()"""
+            print("Recipe:",i)
+            #print(recipe)
+            if not es.exists(index=index_name,id=recipe.id):
+                if isinstance(recipe.upload_date,str) == False:
+                    es.index(index=index_name, id=recipe.id, body= {'ingredients': recipe.ingredients, 'instructions': recipe.instructions, 'upload_date': recipe.upload_date, 'revised_date': recipe.revised_date, 'title': recipe.title, 'description': recipe.description, 'user_name': recipe.user_name, 'image_name': recipe.image_name})
+                else:
+                    print(recipe)
+            i+=1
+addToEs()
 
 def insert_user(username1, password1, email1, privilege1):
     hashedPass = sha256(password1.encode('utf-8')).hexdigest()
@@ -227,10 +235,11 @@ def update_image(image_data1, image_name1):
 def home():
     return 
 
-"""
-@app.route('/search', methods = ['GET'])
+
+@app.route('/search', methods = ['POST'])
 def search():
-    search_query = request.args.get('search_query', '')
+    search_query = request.json
+    print(request.json)
     if search_query:
         # Perform search using Elasticsearch
         search_body = {
@@ -241,10 +250,16 @@ def search():
                 }
             }
         }
-        search_results = es.search(index='recipe_index', body=search_body)
+        search_results = es.search(index='recipe_index', body=search_body,request_timeout=60)
         recipes = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
+
+        for recipe in recipes:
+            recipe["ingredients"] = recipe["ingredients"].replace("'|| '", ", ").replace("\"`['", "").replace("']`\"", "").replace("`", "")
+            recipe["ingredients"] = recipe["ingredients"].replace("||", ",")
+            recipe["instructions"] = recipe["instructions"].replace("||", ",").replace("\"`", "").replace("`\"", "")
+        print(recipes)
         return jsonify({"search" : recipes})
-"""
+
 
 #app route that deals with the insertion of a user
 @app.route("/create_user", methods = ['GET', 'POST'])
