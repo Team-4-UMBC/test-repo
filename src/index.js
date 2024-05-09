@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Search from "./pages/search.js"
 import {Link, useNavigate} from 'react-router-dom';
+import Recipe from "./pages/recipe.js"
 
 
 export class Toolbar extends React.Component {
@@ -122,7 +123,7 @@ export function SearchBar() {
               setState({
                 recipes: data.search
               });
-              navigate('/search',{"state":{"recipes":data.search}});
+              navigate('/search',{"state":{"recipes":data.search,"search_term":JSON.stringify(document.getElementById("RecipeSearch").value)}});
               //toSearch();
           }));
       event.preventDefault();
@@ -193,6 +194,10 @@ const router = createBrowserRouter([
   {
     path: "search",
     element: <><Toolbar/><Search/></>,
+  },
+  {
+    path: "recipe",
+    element: <><Toolbar/><Recipe/></>,
   },
 ]);
 

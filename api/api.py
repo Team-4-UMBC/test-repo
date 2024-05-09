@@ -445,7 +445,10 @@ def displayImage():
     #return Recipe.query.get(id)
     #image = Image.query.get(Recipe.query.get(2).image_name)
     #return jsonify({"image_name": image.image_name, "image_data": image.data})
-    return Image.query.get(Recipe.query.get(2).image_name).data
+    if request.method == 'GET':
+        return Image.query.get(Recipe.query.get(2).image_name).data
+    elif request.method == 'POST':
+        return Image.query.get(Recipe.query.get(request.json).image_name).data
 
 #app route that displays the recipe of the day
 @app.route("/recipeOTD", methods = ['GET', 'POST'])

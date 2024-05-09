@@ -95,6 +95,19 @@ div.ROTD {
   border-width:2px;
   position: relative;
 }
+
+div.ROTD_search {
+  transition: box-shadow .3s;
+  width:60vw;
+  height: 169px;
+  border-style: solid;
+  margin: auto;
+  border-width:2px;
+  position: relative;
+}
+.ROTD_search:hover {
+  box-shadow: 0 0 40px rgba(33,33,33,.6); 
+}
 div.search {
   width:60vw;
   height: 169px;
