@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dropdown from './components/Dropdown/Dropdown';
+import DropdownCreate from './components/Dropdown/DropdownCreate';
 import "./index.css";
 import {
   createBrowserRouter,
@@ -23,7 +24,9 @@ export class Toolbar extends React.Component {
   render() {
     return (
       <ul class = "Toolbar">
-        <li class = "toolbar"style={{float : "left"}}><a class = "toolbar" href="#signup">Sign Up</a></li>
+        <li class = "toolbar"style={{float : "left"}}>
+          <DropdownCreate buttonText="Sign Up " content = ""/>
+        </li>
         <li class = "toolbar"style={{float : "left"}}>
           <Dropdown buttonText="Log In " content = ""/>
         </li>
