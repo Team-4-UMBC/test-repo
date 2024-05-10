@@ -16,7 +16,7 @@ code {
     position: fixed;
     z-index: 1;
     min-width: 10%;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: left;
     padding: 1rem;
@@ -43,4 +43,5 @@ code {
 
 .content-open{
     opacity: 1;
+    display: flex;
 }
