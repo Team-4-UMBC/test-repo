@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import Dropdown from './components/Dropdown/Dropdown';
 import DropdownCreate from './components/Dropdown/DropdownCreate';
+import DropdownEdit from './components/Dropdown/DropdownEdit';
 import Upload from './pages/upload/upload';
 import "./index.css";
 import {
@@ -39,7 +40,9 @@ export class Toolbar extends React.Component {
               Test
             </Link>
           </li>
-          <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#account_details">Account Details</a> </li>
+          <li class = "toolbar"style={{float : "right"}}>
+            <DropdownEdit buttonText="Account Details " content = ""/>
+          </li>
         </ul>
     );
   }
@@ -65,7 +68,7 @@ export function Recipe_OTD() {
   });
   const [dataImage, setDataImage] = useState();
   useEffect(() => {
-      fetch("/recipe").then((res) => 
+      fetch("/recipeOTD").then((res) => 
       res.json().then((data) => {
               setData({
                 id: data.id,
@@ -82,12 +85,12 @@ export function Recipe_OTD() {
       );
   }, []);
   useEffect(() => {
-    fetch("/image").then((res) => 
+    fetch("/imageOTD").then((res) => 
     res.blob().then((data1) => {
             setDataImage(URL.createObjectURL(data1));
         })
     );
-}, []);
+  }, []);
 
   //three text boxes and a button
   return (
