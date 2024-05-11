@@ -52,7 +52,7 @@ const Upload = () => {
                     </div>
                     <h3>Instructions</h3>
                     <div className="notSmolContainer">
-                        <textarea className = "editor" name="editor" placeholder="Enter Recipe Instructions here" onChange={(e) => setIngredients(e.target.ingredients) } required/>
+                        <textarea className = "editor" name="editor" placeholder="Enter Recipe Instructions here" onChange={(e) => setInstructions(e.target.instructions) } required/>
                     </div>
                     <div>
                         <h2>Add Image:</h2>
@@ -64,25 +64,6 @@ const Upload = () => {
             </div>
         </form>
     );
-
-    /*
-    return(
-        <section className="upload-post">
-            <div className="container">
-                <h2>Upload A Recipe</h2>
-                <p className="form_error-message">
-                    This is an error message
-                </p>
-                <form className="form create-post_form">
-                    <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)}
-                    autoFocus />
-                    <input type="file" onChange={e => setImage(e.target.files[0])} accept="png, jpg, jpeg"></input>
-                    <button type="submit" className="btn-submit">Upload Recipe</button>
-                </form>
-            </div>
-        </section>
-    )
-    */
     
 }
 

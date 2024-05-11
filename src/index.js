@@ -34,10 +34,9 @@ export class Toolbar extends React.Component {
           </li>
           <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth : 0, float : "" }}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-175}}/></a></li>
           <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li>
-          <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes"> Upload Recipe </a> </li>
           <li class = "toolbar" style={{float : "right"}}>
             <Link to='/upload' class="toolbar">
-              Post a Recipe
+              Upload Recipe
             </Link>
           </li>
           <li class = "toolbar"style={{float : "right"}}>
