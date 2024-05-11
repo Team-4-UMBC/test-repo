@@ -37,7 +37,7 @@ export class Toolbar extends React.Component {
           <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes"> Upload Recipe </a> </li>
           <li class = "toolbar" style={{float : "right"}}>
             <Link to='/upload' class="toolbar">
-              Test
+              Post a Recipe
             </Link>
           </li>
           <li class = "toolbar"style={{float : "right"}}>
