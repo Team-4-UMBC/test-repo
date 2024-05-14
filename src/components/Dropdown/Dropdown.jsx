@@ -2,19 +2,12 @@ import React from "react";
 import DropdownButton from "../DropdownButton/DropdownButton";
 import DropdownContent from "../DropdownContent/DropdownContent";
 import "./Dropdown.css";
-import { useState } from "react";
 
-const Dropdown = ({buttonText, content}) => {
-
-    const [open, setOpen] = useState(false);
-
-    const toggleDropdown = () => {
-        setOpen((open) => !open);
-    };
+const Dropdown = ({buttonText, content, click, open}) => {
 
     return (
         <div className="dropdown">
-            <DropdownButton toggle={toggleDropdown} open={open}>
+            <DropdownButton toggle={click} open={open}>
                 {buttonText}            
             </DropdownButton>
             <DropdownContent open={open}>
