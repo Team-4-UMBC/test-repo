@@ -252,6 +252,7 @@ def update_image(image_data1, image_name1):
 def home():
     return 
 
+
 @app.route('/search', methods = ['POST'])
 def search():
     search_query = request.json
@@ -275,6 +276,7 @@ def search():
         print(recipes)
         return jsonify({"search" : recipes})
 
+
 #app route that deals with the insertion of a user
 @app.route("/create_user", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
@@ -294,11 +296,13 @@ def createUser():
 @cross_origin(supports_creditals=True, origin="*")
 def deleteUser():
     global currentUser
+    global currentEmail
     username = request.json['username']
     account = User.query.get(username)
     if account != None and username == currentUser:
         delete_user(username)
         currentUser = None
+        currentEmail = None
         return {"status": 1}
     else:
         return {"status": 0}
@@ -318,20 +322,17 @@ def login():
         if account == password:
             currentUser = username
             currentEmail = User.query.get(username).email
-            print(currentUser)
-            return {"status": 1}
-    return {"status": 0}
+            return {"status": True}
+    return {"status": False}
 
 #app route that determines whether or not a user is logged in
 @app.route("/status", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def status():
     global currentUser
-    print(currentUser)
     if currentUser:
         return {"login": True}
     else:
-        print("hi")
         return {"login": False}
     
 #app route that logs out the user
@@ -342,7 +343,7 @@ def logout():
     global currentEmail
     currentUser = None
     currentEmail = None
-    return {"status": 0}
+    return {"status": False}
 
 #app route that deals with editing a user's username
 @app.route("/edit_username", methods = ['GET', 'POST'])
@@ -403,7 +404,6 @@ def uploadRecipe():
     instructions = request.json['instructions']
     image_name = request.json['image_name']
     user_name = currentUser
-    print(user_name)
     if user_name != None and title != None and ingredients != None and instructions != None and User.query.get(user_name) != None:
         insert_recipe(title, description, datetime.datetime.now(timezone.utc), datetime.datetime.now(timezone.utc), image_name, user_name, ingredients, instructions)
         return {"status": 1}
