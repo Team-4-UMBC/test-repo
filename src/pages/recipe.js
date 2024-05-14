@@ -31,28 +31,20 @@ export const Recipe = () => {
     useImage();
 
     return(
-        <div>
 
         <div>
-        <div class="margin">
-        </div>
-        <div className="ROTD">
-            <img src={dataImage[specific_recipe.state.recipe.id]} alt="Missing Recipe Image" style = {{width:"274px", height: "169px", objectFit: "cover",display:"inline-block",borderRight:"solid",borderWidth:"2px"}}></img>
-            <h2 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,textDecoration:"underline"}} >{specific_recipe.state.recipe.title}</h2>
+        <div className="Indiv_Recipe">
+            <img src={dataImage[specific_recipe.state.recipe.id]} alt="Missing Recipe Image" className = "RecipeImage" style = {{width:"100vw", height: "338px", objectFit: "cover",filter: "blur(10px)",position:"absolute"}}></img>
+            <h2 className="indiv" >{specific_recipe.state.recipe.title}</h2>
+            
 
 
-            <h3 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,marginTop:45}}>Ingredients</h3>
-            <ul style={{ width: "200px", height: "90px", overflow: "hidden", position:"absolute", display:"inline-block",marginTop:75,marginLeft:20}}>
-            <li>{specific_recipe.state.recipe.ingredients}</li>
-            </ul>
+            <h2 style = {{top: "47%", left: "2%",position:"absolute",textDecoration: "underline", textDecorationColor:"#fdb515",fontSize: "30px"}}>Ingredients</h2>
+            <p style={{ top: "47%", left: "2%",width: "350px", overflow: "hidden", position:"absolute", display:"inline-block",marginTop:75,marginLeft:20,borderRight:"solid", paddingRight:"10px", paddingBottom:"20px",fontSize: "18px"}}>{specific_recipe.state.recipe.ingredients}</p>
 
-            <h3 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:"20vw",marginTop:45}}>Instructions</h3>
-            <ul style={{ width: "200px", height: "90px", overflow: "hidden", position:"absolute", display:"inline-block",marginTop:75,marginLeft:"20vw"}}>
-            <li>{specific_recipe.state.recipe.instructions}</li>
-            </ul>
+            <h2 style = {{top: "47%", left: "500px",width:"30vw", height: "169px",display:"inline-block",position:"absolute",textDecoration: "underline", textDecorationColor:"#fdb515",fontSize: "30px"}}>Instructions</h2>
+            <p style={{ top: "47%", left: "500px",width: "70vw", overflow: "hidden", position:"absolute", display:"inline-block",marginTop:75,marginLeft:20,borderRight:"solid", paddingRight:"10px", paddingBottom:"20px",fontSize: "18px"}}>{specific_recipe.state.recipe.instructions}</p>
         </div>
-        </div>
-    )))
         </div>
     );
 }

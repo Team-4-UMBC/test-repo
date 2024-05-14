@@ -53,7 +53,7 @@ export const Search = () => {
             </div>
             <div className="ROTD_search" onClick={() => LoadIndividual(recipe)} style={{transition: "box shadow .3s"}}>
                 <img src={dataImage[recipe.id]} alt="Missing Recipe Image" style = {{width:"274px", height: "169px", objectFit: "cover",display:"inline-block",borderRight:"solid",borderWidth:"2px"}}></img>
-                <h2 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,textDecoration:"underline"}} >{recipe.title}</h2>
+                <h2 style = {{width:"40vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,textDecoration:"underline"}} >{recipe.title}</h2>
 
     
                 <h3 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,marginTop:45}}>Ingredients</h3>

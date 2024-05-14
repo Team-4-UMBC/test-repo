@@ -91,13 +91,19 @@ export function Recipe_OTD() {
     );
   }, []);
 
+  const navigate = useNavigate();
+  function LoadIndividual(this_recipe){
+      console.log(this_recipe.id);
+      navigate('/recipe',{"state":{"recipe":this_recipe}})
+  };
+
   //three text boxes and a button
   return (
       <div>
         <div class="margin">
           <h1>Recipe of the Day</h1>
         </div>
-        <div className="ROTD">
+        <div className="ROTD" onClick={() => LoadIndividual(dataRecipe)}>
           <img src={dataImage} alt="Missing Recipe Image" style = {{width:"274px", height: "169px", objectFit: "cover",display:"inline-block",borderRight:"solid",borderWidth:"2px"}}></img>
           <h2 style = {{width:"30vw", height: "169px",display:"inline-block",position:"absolute",marginTop:-3,marginLeft:10,textDecoration:"underline"}}>{dataRecipe.title}</h2>
 
@@ -170,16 +176,32 @@ export function SearchBar() {
 }
 
 
-export class Ingredient_OTD extends React.Component {
+export function Ingredient_OTD() {
 
-  constructor() {
-    super();
+  const [state, setState] = useState({
+    recipes: []
+  });
+
+  const navigate = useNavigate();
+
+  const IOTD_submit = (event) => {
+      fetch("/search", {method:"POST", headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      }, body: JSON.stringify("Chicken")}).then(res => res.json().then(
+        (data) => {
+              setState({
+                recipes: data.search
+              });
+              navigate('/search',{"state":{"recipes":data.search,"search_term":JSON.stringify("Chicken")}});
+              //toSearch();
+          }));
+      event.preventDefault();
   }
 
 
 
   //three text boxes and a button
-  render() {
     return (
       <div>
         <div class="margin" style = {{marginTop:"15vh"}}>
@@ -187,14 +209,13 @@ export class Ingredient_OTD extends React.Component {
         </div>
         <div class="IOTD">
           <h3 style={{textDecoration: "underline", textDecorationColor: "#fdb515", display: "inline-block"}}>Chicken!</h3>
-          <form onSubmit={this.Ingredient} style = {{display: "inline-block"}}>
+          <form onSubmit={IOTD_submit} style = {{display: "inline-block"}}>
             <input class= "lesscoolbutton" type="submit" value="Search for recipes with Chicken!" />
           </form>
         </div>
       </div>
 
     );
-  }
 }
 
 const router = createBrowserRouter([

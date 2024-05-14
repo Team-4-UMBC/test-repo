@@ -88,12 +88,35 @@ div.margin {
 }
 
 div.ROTD {
+  transition: box-shadow .3s;
   width:60vw;
   height: 169px;
   border-style: solid;
   margin: auto;
   border-width:2px;
   position: relative;
+}
+.ROTD:hover {
+  box-shadow: 0 0 40px rgba(33,33,33,.6); 
+}
+
+h2.indiv {
+  top: 20%;
+  left: 48%;
+  transform: translate(-50%,-50%);
+  text-decoration:underline;
+  text-decoration-color:#fdb515;
+  position:absolute;
+  font-size: 60px;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: white;
+}
+
+div.Indiv_Recipe {
+  overflow: hidden;
+}
+img.RecipeImage {
+  clip-path: view-box;
 }
 
 div.ROTD_search {
