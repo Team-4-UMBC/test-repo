@@ -1,6 +1,8 @@
 import "./DropdownContent.css";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import {TextInput} from 'react-native';
+
+//const AuthContext = createContext();
 
 /**
  * THIS COMPONENT HANDLES THE LOGIN INPUT
@@ -11,6 +13,7 @@ import {TextInput} from 'react-native';
 const DropdownContent = ({children, open}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [login, setLogin] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -32,23 +35,24 @@ const DropdownContent = ({children, open}) => {
         .then(response => response.json())
         .then(data1 => {
             if (data1.status === 1){
-                alert("Login successful")
+                setLogin(data1.status)
+                alert("Login successful. Please close the dropdown.");
             }
             else {
-                alert("Login failed")
+                alert("Login failed, try again");
             }
         })
+
     }
 
-    return (       
-
+    return (
         //This div collects the inputs.
-        <div className={`dropdown-content 
+        <div className={`dropdown-contentLog 
             ${open ? "content-open" : null}`}>
             {children} 
             <form onSubmit={handleSubmit}>
                 <label className="input-content"> Username: 
-                         <input 
+                        <input 
                             type="text"
                             required
                             value={username}
@@ -72,6 +76,7 @@ const DropdownContent = ({children, open}) => {
             </form>
         </div>
     );
+    
 }
-
 export default DropdownContent;
+//export const useAuth = () => useContext(AuthContext);

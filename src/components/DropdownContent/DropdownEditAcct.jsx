@@ -8,16 +8,15 @@ import {TextInput} from 'react-native';
  * PLEASE DO ANY FETCHES/POSTS/WHATEVER IN handleSubmit
  * The username and password are saved once you click the log in button
  */
-const DropdownEditAcct = ({children, open}) => {
-    const [username, setUsername] = useState('');
+const DropdownEditAcct = ({children, open, username1, email1}) => {
+    const [username, setUsername] = useState(username1);
     const [password, setPassword] = useState('');
     const [newUsername, setNewUsername] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newEmail, setNewEmail] = useState('');
-    const [email, setEmail] = useState('');
-    const [loggedin, setLogin] = useState({status: 1});
+    const [email, setEmail] = useState(email1);
     const [acct, setAcct] = useState({status: 1});
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         const account = { username, password, email, newUsername, newPassword, newEmail };
@@ -102,17 +101,6 @@ const DropdownEditAcct = ({children, open}) => {
         }
     }
 
-    const handleSubmit1 = (e) => {
-        e.preventDefault();
-        if(loggedin.status === 1) {
-            alert("Are you sure you want to log out?\nClick the button again to confirm")
-            setLogin({status: 2})
-        }
-        else if(loggedin.status === 2) {
-            alert("Successfully logged out")
-            setLogin({status: 0})
-        }
-    }
 
     const handleSubmit2 = (e) => {
         const account = { username }
@@ -136,7 +124,6 @@ const DropdownEditAcct = ({children, open}) => {
                 .then(data1 => {
                     if (data1.status === 1){
                         setAcct({status: 0})
-                        setLogin({status: 0})
                         alert("Successfully deleted account")
                     }
                     else {
@@ -144,24 +131,10 @@ const DropdownEditAcct = ({children, open}) => {
                     }
             })
             setAcct({status: 1})
-            setLogin({status: 0})
+    
         }
     }
-
-    const account = { username, email };
-    fetch('http://localhost:5000/display_email', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-        Accept: 'application/json',
-        'Content-Type': "application/json"
-        },
-        body: JSON.stringify(account),
-    })
-    .then(response => response.json())
-    .then(data1 => {
-        setEmail(data1.email)
-    })
+    
     return (       
 
         //This div collects the inputs.
@@ -180,7 +153,7 @@ const DropdownEditAcct = ({children, open}) => {
                             value={newUsername}
                             onChange={(e) => setNewUsername(e.target.value)}
                             />
-                    </label>
+                </label>
                 <label className="input-content">
                     New Password: 
                         <TextInput 
@@ -193,7 +166,7 @@ const DropdownEditAcct = ({children, open}) => {
                             />
                     </label>
                     <label className="input-content">
-                    New Email:
+                        New Email:
                         <input 
                             type="text"
                             required
@@ -205,8 +178,6 @@ const DropdownEditAcct = ({children, open}) => {
                 <button onClick={handleSubmit}>Edit account
                 </button>
             </form>
-            <button onClick={handleSubmit1}>Log out
-            </button>
             <button onClick={handleSubmit2}>Delete account
             </button>
         </div>

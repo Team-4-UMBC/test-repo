@@ -32,6 +32,27 @@ code {
     opacity: 0;
 }
 
+.dropdown-contentLog{
+    position: fixed;
+    right:0;
+    z-index: 1;
+    min-width: 10%;
+    display: none;
+    flex-direction: column;
+    align-items: left;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    max-height: 40vh;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: white;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    opacity: 0;
+}
+
 .input-content{
     min-width: 10%;
     display: block;
