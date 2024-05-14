@@ -27,12 +27,12 @@ passwd = "123456"
 es = Elasticsearch(['https://localhost:9200'], verify_certs=False, http_auth=(usrname, passwd))
 
 #database set up
-engine = create_engine('mysql+pymysql://root:password@localhost')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306')
 statement1 = text("CREATE DATABASE IF NOT EXISTS website1;")
 with engine.connect() as conn:
     conn.execute(statement1)
 engine.dispose()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/website1'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.0.0.1:3306/website1'
 db = SQLAlchemy(app)
 app.app_context().push() 
 
@@ -87,10 +87,10 @@ db.session.commit()
 
 #checks if the user table is empty
 userExists = True
-engine = create_engine('mysql+pymysql://root:password@localhost/website1')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM user;"))
-    if '0' in str(set(result)):
+    if '(0,)' in str(set(result)):
         userExists = False
 
 #populates the user table with an admin if it is empty
@@ -101,7 +101,7 @@ if userExists == False:
 
 #checks if the image table is empty
 imageExists = True
-engine = create_engine('mysql+pymysql://root:password@localhost/website1')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM image;"))
     if '(0,)' in str(set(result)):
@@ -121,7 +121,7 @@ engine.dispose()
 
 #checks if the recipe table is empty
 recipeExists = True
-engine = create_engine('mysql+pymysql://root:password@localhost/website1')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM recipe;"))
     if '(0,)' in str(set(result)):
@@ -131,13 +131,16 @@ engine.dispose()
 
 #populates the recipe table with recipes from the dataset if it is empty
 if recipeExists == False:
-    engine = create_engine('mysql+pymysql://root:password@localhost/website1?local_infile=1')
+    engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1?local_infile=1')
     with engine.connect() as conn:
         #REPLACE FILE PATH WITH YOUR FILE PATH TO recipe.csv
         result = conn.execute(text("LOAD DATA LOCAL INFILE '/Users/miche/Documents/Spring 24/Cmsc 447/test-repo/api/recipe.csv' INTO TABLE recipe FIELDS TERMINATED BY ',' ENCLOSED BY '`' LINES TERMINATED BY '\n';"))
         conn.commit()
     engine.dispose()
 print("Database populated")
+
+currentUser = None
+currentEmail = None
 
 index_name = 'recipe_index'
 if not es.indices.exists(index=index_name):
@@ -146,7 +149,7 @@ if not es.indices.exists(index=index_name):
 def addToEs():
     with app.app_context():
         recipes = Recipe.query.all()
-        i= 1
+        i = 1
         for recipe in recipes:
             print("Recipe:",i)
             #print(recipe)
@@ -172,69 +175,82 @@ def delete_user(username1):
     db.session.commit()
 
 def update_username(username1, username2):
-    User.query.filter_by(username=username1).username = username2
+    user = User.query.filter_by(username=username1).first()
+    user.username = username2
     db.session.commit()
 
 def update_password(username1, password2):
     hashedPass = sha256(password2.encode('utf-8')).hexdigest()
-    User.query.filter_by(username=username1).password = hashedPass
+    user = User.query.filter_by(username=username1).first()
+    user.password = hashedPass
     db.session.commit()
 
 def update_email(username1, email2):
-    User.query.filter_by(username=username1).email = email2
+    user = User.query.filter_by(username=username1).first()
+    user.email = email2
     db.session.commit()
 
-def insert_recipe(id1, title1, description1, upload_date1, revised_date1, image_name1, user_name1, ingredients1, instructions1):
-    recipe = Recipe(id=id1, title=title1, description=description1, ingredients=ingredients1, instructions=instructions1, upload_date=upload_date1, revised_date=revised_date1, image_name=image_name1, user_name=user_name1)
+def insert_recipe(title1, description1, upload_date1, revised_date1, image_name1, user_name1, ingredients1, instructions1):
+    recipe = Recipe(title=title1, description=description1, ingredients=ingredients1, instructions=instructions1, upload_date=upload_date1, revised_date=revised_date1, image_name=image_name1, user_name=user_name1)
     db.session.add(recipe)
     db.session.commit()
 
 def insert_image(image_name1, image_data1):
-    image = Image(image_name=image_name1, image_data=image_data1)
-    db.session.add(image)
-    db.session.commit()
+    if image_name1 != None and image_data1 != None:
+        image = Image(image_name=image_name1, data=image_data1)
+        db.session.add(image)
+        db.session.commit()
 
 def delete_image(image_name1):
-    Image.query.filter_by(image_name=image_name1).delete()
-    db.session.commit()
+    if image_name1:
+        Image.query.filter_by(image_name=image_name1).delete()
+        db.session.commit()
 
 def delete_recipe(id1):
     Recipe.query.filter_by(id=id1).delete()
     db.session.commit()
 
 def update_title(id1, title1):
-    Recipe.query.filter_by(id=id1).title = title1
+    recipe = Recipe.query.filter_by(id=id1).first()
+    recipe.title = title1
     db.session.commit()
 
 def update_description(id1, description1):
-    Recipe.query.filter_by(id=id1).description = description1
+    recipe = Recipe.query.filter_by(id=id1).first()
+    recipe.description = description1
     db.session.commit()
 
 def update_ingredients(id1, ingredients1):
-    Recipe.query.filter_by(id=id1).ingredients = ingredients1
+    recipe = Recipe.query.filter_by(id=id1).first()
+    recipe.ingredients = ingredients1
     db.session.commit()
 
 def update_instructions(id1, instructions1):
-    Recipe.query.filter_by(id=id1).instructions = instructions1
+    recipe = Recipe.query.filter_by(id=id1).first()
+    recipe.instructions = instructions1
     db.session.commit()
 
 def update_revisedDate(id1, revisedDate1):
-    Recipe.query.filter_by(id=id1).revisedDate = revisedDate1
+    recipe = Recipe.query.filter_by(id=id1).first()
+    recipe.revisedDate = revisedDate1
     db.session.commit()
 
-def update_imageName(id1, image_name1):
-    Recipe.query.filter_by(id=id1).image_name = image_name1
+def update_imageName(id1, image_name1, image_name2):
+    recipe = Recipe.query.filter_by(id=id1).first()
+    recipe.image_name = image_name2
+    image = Image.query.filter_by(image_name=image_name1).first()
+    image.image_name = image_name2
     db.session.commit()
 
 def update_image(image_data1, image_name1):
-    Image.query.filter_by(image_name=image_name1).image_data = image_data1
+    image = Image.query.filter_by(image_name=image_name1).first()
+    image.data = image_data1
     db.session.commit()
 
 
 @app.route("/")
 def home():
     return 
-
 
 @app.route('/search', methods = ['POST'])
 def search():
@@ -252,14 +268,12 @@ def search():
         }
         search_results = es.search(index='recipe_index', body=search_body,request_timeout=60)
         recipes = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
-
         for recipe in recipes:
             recipe["ingredients"] = recipe["ingredients"].replace("'|| '", ", ").replace("\"`['", "").replace("']`\"", "").replace("`", "")
             recipe["ingredients"] = recipe["ingredients"].replace("||", ",")
             recipe["instructions"] = recipe["instructions"].replace("||", ",").replace("\"`", "").replace("`\"", "")
         print(recipes)
         return jsonify({"search" : recipes})
-
 
 #app route that deals with the insertion of a user
 @app.route("/create_user", methods = ['GET', 'POST'])
@@ -276,33 +290,70 @@ def createUser():
         return {"status": 0}
 
 #app route that deals with the deletion of a user
-@app.route("/delete_user", methods = ['POST'])
+@app.route("/delete_user", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def deleteUser():
+    global currentUser
     username = request.json['username']
-    delete_user(username)
+    account = User.query.get(username)
+    if account != None and username == currentUser:
+        delete_user(username)
+        currentUser = None
+        return {"status": 1}
+    else:
+        return {"status": 0}
+    
 
 #app route that deals with user login
 @app.route("/login", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def login():
+    global currentUser
+    global currentEmail
     username = request.json['username']
     password = request.json['password']
     password = sha256(password.encode('utf-8')).hexdigest()
-    account = User.query.get(username).password
-    if account == password:
-        return {"status": 1}
+    if User.query.get(username):
+        account = User.query.get(username).password
+        if account == password:
+            currentUser = username
+            currentEmail = User.query.get(username).email
+            print(currentUser)
+            return {"status": 1}
+    return {"status": 0}
+
+#app route that determines whether or not a user is logged in
+@app.route("/status", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def status():
+    global currentUser
+    print(currentUser)
+    if currentUser:
+        return {"login": True}
     else:
-        return {"status": 0}
+        print("hi")
+        return {"login": False}
+    
+#app route that logs out the user
+@app.route("/logout", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def logout():
+    global currentUser
+    global currentEmail
+    currentUser = None
+    currentEmail = None
+    return {"status": 0}
 
 #app route that deals with editing a user's username
 @app.route("/edit_username", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editUsername():
+    global currentUser
     username1 = request.json['username']
     username = request.json['newUsername']
     if username != None and User.query.get(username) == None and User.query.get(username1) != None:
         update_username(username1, username)
+        currentUser = username
         return {"status": 1}
     else:
         return {"status": 0}
@@ -318,59 +369,76 @@ def editPassword():
         return {"status": 1}
     else:
         return {"status": 0}
-
+    
 #app route that deals with editing a user's email
 @app.route("/edit_email", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editEmail():
+    global currentEmail
     username = request.json['username']
     email = request.json['newEmail']
     if username != None and email != None and User.query.get(username) != None:
         update_email(username, email)
+        currentEmail = email
         return {"status": 1}
     else:
         return {"status": 0}
 
-#app route that deals with displaying a user's username
-@app.route("/display_username", methods = ['GET', 'POST'])
+#app route that deals with displaying a user's details
+@app.route("/display_user", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
-def displayUsername():
-    username = request.json['username']
-    return {"username": User.query.get(username).username}
-
-#app route that deals with displaying a user's email
-@app.route("/display_email", methods = ['GET', 'POST'])
-@cross_origin(supports_creditals=True, origin="*")
-def displayEmail():
-    username = request.json['username']
-    return {"email": User.query.get(username).email}
+def displayUser():
+    global currentUser
+    global currentEmail
+    return {"username": currentUser, "email": currentEmail}
 
 #app route that deals with the upload of a recipe
-@app.route("/upload_recipe", methods = ['POST'])
+@app.route("/upload_recipe", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def uploadRecipe():
-    id = request.json['id']
+    global currentUser
     title = request.json['title']
     description = request.json['description']
     ingredients = request.json['ingredients']
     instructions = request.json['instructions']
     image_name = request.json['image_name']
-    #image_data = request.json['image_data']
-    user_name = request.json['user_name']
-    insert_recipe(id, title, description, datetime.datetime.now(timezone.utc), datetime.datetime.now(timezone.utc), image_name, user_name, ingredients, instructions)
-    #insert_image(image_name, image_data)
+    user_name = currentUser
+    print(user_name)
+    if user_name != None and title != None and ingredients != None and instructions != None and User.query.get(user_name) != None:
+        insert_recipe(title, description, datetime.datetime.now(timezone.utc), datetime.datetime.now(timezone.utc), image_name, user_name, ingredients, instructions)
+        return {"status": 1}
+    else:
+        return {"status": 0}
+    
+#app route that deals with the upload of an image
+@app.route("/upload_image", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def uploadImage():
+    image_name = request.form['image_name']
+    file = request.files['imageData']
+    image_data = file.read()
+    if image_name != None and file != None:
+        insert_image(image_name, image_data)
+        return {"status": 1}
+    else:
+        return {"status": 0}
 
 #app route that deals with the deletion of a recipe
-@app.route("/delete_recipe", methods = ['POST'])
+@app.route("/delete_recipe", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def deleteRecipe():
+    global currentUser
     id = request.json['id']
     image = Recipe.query.get(id).image_name
-    delete_recipe(id)
-    #delete_image(image)
+    if id != None and (Recipe.query.get(id).user_name == currentUser or User.query.get(currentUser).privilege == 1):
+        delete_recipe(id)
+        delete_image(image)
+        return {"status": 1}
+    else:
+        return {"status": 0}
 
 #app route that edits recipe title
-@app.route("/edit_title", methods = ['POST'])
+@app.route("/edit_title", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editTitle():
     id = request.json['id']
@@ -379,7 +447,7 @@ def editTitle():
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
 #app route that edits recipe description
-@app.route("/edit_description", methods = ['POST'])
+@app.route("/edit_description", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editDescription():
     id = request.json['id']
@@ -388,7 +456,7 @@ def editDescription():
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
 #app route that edits recipe ingredients
-@app.route("/edit_ingredients", methods = ['POST'])
+@app.route("/edit_ingredients", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editIngredients():
     id = request.json['id']
@@ -397,7 +465,7 @@ def editIngredients():
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
 #app route that edits recipe instructions
-@app.route("/edit_instructions", methods = ['POST'])
+@app.route("/edit_instructions", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editInstructions():
     id = request.json['id']
@@ -406,7 +474,7 @@ def editInstructions():
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
 #app route that edits recipe image name
-@app.route("/edit_imageName", methods = ['POST'])
+@app.route("/edit_imageName", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editImageName():
     id = request.json['id']
@@ -416,11 +484,11 @@ def editImageName():
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
 #app route that edits recipe image 
-@app.route("/edit_imageData", methods = ['POST'])
+@app.route("/edit_imageData", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editImageData():
-    image_name = request.json['image_name']
-    image_data = request.json['image_data']
+    image_name = request.form['image_name']
+    image_data = request.files['image_data']
     update_image(image_name, image_data)
     update_revisedDate(datetime.datetime.now(timezone.utc))
 
@@ -428,23 +496,24 @@ def editImageData():
 @app.route("/recipe", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayRecipe():
-    #id = request.json['id']
-    #return Recipe.query.get(id)
-    recipe = Recipe.query.get(2)
+    id = request.json['id']
+    recipe = Recipe.query.get(id)
     ingredients = recipe.ingredients.replace("'|| '", ", ").replace("\"`['", "").replace("']`\"", "").replace("`", "")
     ingredients = ingredients.replace("||", ",")
     instructions = recipe.instructions.replace("||", ",").replace("\"`", "").replace("`\"", "")
     return {"id": recipe.id, "title": recipe.title, "description": recipe.description, "ingredients": ingredients, "instructions": instructions, "username": recipe.user_name, "upload_date": recipe.upload_date, "revised_date": recipe.revised_date, "image_name": recipe.image_name}
-#/<int:recipe_id>
+
+#app route that displays a specific image
+@app.route("/display_image", methods = ['GET', 'POST'])
+@cross_origin(supports_creditals=True, origin="*")
+def getImage():
+    id = request.json['id']
+    return Image.query.get(Recipe.query.get(id).image_name).data
 
 #app route that displays a specific image
 @app.route("/image", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayImage():
-    #id = request.json['id']
-    #return Recipe.query.get(id)
-    #image = Image.query.get(Recipe.query.get(2).image_name)
-    #return jsonify({"image_name": image.image_name, "image_data": image.data})
     if request.method == 'GET':
         return Image.query.get(Recipe.query.get(2).image_name).data
     elif request.method == 'POST':
@@ -459,7 +528,6 @@ def displayRecipeOTD():
     ingredients = ingredients.replace("||", ",")
     instructions = recipe.instructions.replace("||", ",").replace("\"`", "").replace("`\"", "")
     return {"id": recipe.id, "title": recipe.title, "description": recipe.description, "ingredients": ingredients, "instructions": instructions, "username": recipe.user_name, "upload_date": recipe.upload_date, "revised_date": recipe.revised_date, "image_name": recipe.image_name}
-#/<int:recipe_id>
 
 #app route that displays the image for the recipe of the day
 @app.route("/imageOTD", methods = ['GET', 'POST'])
@@ -467,11 +535,12 @@ def displayRecipeOTD():
 def displayImageOTD():
     return Image.query.get(Recipe.query.get(2).image_name).data
 
-#app route that displays all recipes
-@app.route("/display_recipes", methods = ['GET'])
+#app route that displays user recipes
+@app.route("/user_recipes", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def displayRecipes():
-    recipe = Recipe.query.all()
+    global currentUser
+    recipe = Recipe.query.filter_by(user_name=currentUser)
     return jsonify({"recipes": recipe})
 
 @app.route('/api/time')
