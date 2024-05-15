@@ -5,7 +5,6 @@ import React, {useState, useRef} from 'react'
 const Upload = () => {
 
     //Goes into database
-    const [user, setUser] = useState('')
     const [title, setTitle] = useState('');
     const [ingredients, setIngredients] = useState('');
     const [description, setDescription] = useState('');
@@ -26,17 +25,19 @@ const Upload = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const post = { user, title, ingredients, description, instructions, image_name };
+        const post = { title, ingredients, description, instructions, image_name };
         const formData = new FormData();
-        formData.append('image_name', image_name);
-        formData.append('imageData', imageData, image_name);
+        if(imageData) {
+            formData.append('image_name', image_name);
+            formData.append('imageData', imageData, image_name);
+        }
         /**
          * Same as before, title, ingredients, and instructions are REQUIRED, description and file are OPTIONAL
          * If successful, it should probably give a confirmation or sum
          */
         
         //Resets after submit.
-        if(post.user && post.title && post.ingredients && post.instructions) {
+        if(post.title && post.ingredients && post.instructions) {
             fetch('http://localhost:5000/upload_recipe', {
                 method: 'POST',
                 mode: 'cors',
@@ -88,13 +89,6 @@ const Upload = () => {
                         required
                         value = {title}
                         onChange={(e) => setTitle(e.target.value)}    
-                    />
-                    <input 
-                        type="text"
-                        placeholder="Username"
-                        required
-                        value = {user}
-                        onChange={(e) => setUser(e.target.value)}    
                     />
                     <TextInput
                         type="text"
