@@ -34,7 +34,7 @@ const DropdownContent = ({children, open}) => {
         })
         .then(response => response.json())
         .then(data1 => {
-            if (data1.status === 1){
+            if (data1.status === true){
                 setLogin(data1.status)
                 alert("Login successful. Please close the dropdown.");
             }
