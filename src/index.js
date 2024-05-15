@@ -19,8 +19,11 @@ export function Toolbar() {
 
   const [login, setLogin] = useState(false);
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setOpen((open) => !open);
     return fetch('http://localhost:5000/status', {
             method: 'GET',
@@ -35,7 +38,23 @@ export function Toolbar() {
         );
   }
 
-  const logout = () => {
+  const handleAccount = async () => {
+    setOpen2((open2) => !open2);
+    return fetch("http://localhost:5000/display_user", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+                }
+        }).then((res) => 
+        res.json().then((data) => {
+            setUsername(data.username);
+            setEmail(data.email);
+            setLogin(data.login);
+        })
+    );
+  };
+
+  const logout = async () => {
     return fetch('http://localhost:5000/logout', {
             method: 'GET',
             headers: {
@@ -54,11 +73,11 @@ export function Toolbar() {
     return (
         <ul class = "Toolbar">
           {!login ? <li class = "toolbar"style={{float : "right"}}><Dropdown buttonText="Log In " content = "" click={handleLogin} open={open}/></li> : null}
-          {login ? <li class = "toolbar" style={{float : "left"}}><a class="toolbar" onClick={logout}>Log Out</a> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
+          {login ? <li class = "toolbar" style={{float : "left"}}><a class="toolbar" href="/" onClick={logout}>Log Out</a> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
           <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth : 0, float : "" }}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}}/></a></li>
           {login ? <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li> : null}
           {login ? <li class = "toolbar" style={{float : "right"}}><Link to='/upload' class="toolbar">Upload Recipe</Link></li> : null}
-          {login ? <li class = "toolbar"style={{float : "left"}}><DropdownEdit buttonText="Account Details " content = ""/></li> : null}
+          {login ? <li class = "toolbar"style={{float : "left"}}><DropdownEdit buttonText="Account Details " content = "" click={handleAccount} open={open2} username={username} email={email}/></li> : null}
         </ul>
     );
 }
