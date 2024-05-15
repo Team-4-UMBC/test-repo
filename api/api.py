@@ -175,9 +175,16 @@ def delete_user(username1):
     db.session.commit()
 
 def update_username(username1, username2):
-    user = User.query.filter_by(username=username1).first()
-    user.username = username2
-    db.session.commit()
+    if Recipe.query.filter_by(user_name=username1):
+        insert_user(username2, User.query.filter_by(username=username1).first().password, User.query.filter_by(username=username1).first().email, User.query.filter_by(username=username1).first().privilege)
+        recipes = Recipe.query.filter_by(user_name=username1)
+        for r in recipes:
+            r.user_name = username2
+        db.session.commit()
+    else:
+        user = User.query.filter_by(username=username1).first()
+        user.username = username2
+        db.session.commit()
 
 def update_password(username1, password2):
     hashedPass = sha256(password2.encode('utf-8')).hexdigest()
@@ -350,10 +357,10 @@ def logout():
 @cross_origin(supports_creditals=True, origin="*")
 def editUsername():
     global currentUser
-    username1 = request.json['username']
+    print(currentUser)
     username = request.json['newUsername']
-    if username != None and User.query.get(username) == None and User.query.get(username1) != None:
-        update_username(username1, username)
+    if currentUser != None and User.query.get(username) == None and User.query.get(currentUser) != None:
+        update_username(currentUser, username)
         currentUser = username
         return {"status": 1}
     else:
@@ -363,10 +370,10 @@ def editUsername():
 @app.route("/edit_password", methods = ['GET', 'POST'])
 @cross_origin(supports_creditals=True, origin="*")
 def editPassword():
-    username = request.json['username']
+    global currentUser
     password = request.json['newPassword']
-    if username != None and password != None and User.query.get(username) != None:
-        update_password(username, password)
+    if currentUser != None and password != None and User.query.get(currentUser) != None:
+        update_password(currentUser, password)
         return {"status": 1}
     else:
         return {"status": 0}
@@ -376,10 +383,10 @@ def editPassword():
 @cross_origin(supports_creditals=True, origin="*")
 def editEmail():
     global currentEmail
-    username = request.json['username']
+    global currentUser
     email = request.json['newEmail']
-    if username != None and email != None and User.query.get(username) != None:
-        update_email(username, email)
+    if currentUser != None and email != None and User.query.get(currentUser) != None:
+        update_email(currentUser, email)
         currentEmail = email
         return {"status": 1}
     else:
