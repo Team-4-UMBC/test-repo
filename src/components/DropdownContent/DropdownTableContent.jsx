@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TextInput } from 'react-native';
 
 const DropdownTableContent = ({ children, open, recipe1}) => {
-    const [recipe, setCurrRecipe] = useState(recipe1);
+    const [recipe, setRecipe] = useState(recipe1);
     const [id, setId] = useState(recipe.id);
     const [newTitle, setNewTitle] = useState('');
     const [newDescription, setNewDescription] = useState('');
@@ -11,7 +11,7 @@ const DropdownTableContent = ({ children, open, recipe1}) => {
     const [newImage, setNewImage] = useState('');
 
     /**
-     * Insert Api requests here probably, all info is passed through recipe
+     * Insert backend fetches here in handleSubmit probably, all info is passed through recipe
      * Maybe something that takes the new Inputs and simply replaces the info where the id is located?
      * Right now, none of the inputs are required.
      *
