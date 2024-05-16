@@ -21,6 +21,8 @@
                     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
                     sans-serif;
             font-size: 15px;
+            min-width: 50%;
+            max-width: 65%;
             padding: 10px;
             border: 1px solid lightgray;
         }

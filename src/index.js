@@ -4,6 +4,7 @@ import Dropdown from './components/Dropdown/Dropdown';
 import DropdownCreate from './components/Dropdown/DropdownCreate';
 import DropdownEdit from './components/Dropdown/DropdownEdit';
 import Upload from './pages/upload/upload';
+import RecipeList from './pages/Edit/recipelist.jsx';
 import "./index.css";
 import {
   createBrowserRouter,
@@ -56,7 +57,7 @@ export function Toolbar() {
           {!login ? <li class = "toolbar"style={{float : "right"}}><Dropdown buttonText="Log In " content = "" click={handleLogin} open={open}/></li> : null}
           {login ? <li class = "toolbar" style={{float : "left"}}><a class="toolbar" onClick={logout}>Log Out</a> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
           <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth : 0, float : "" }}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}}/></a></li>
-          {login ? <li class = "toolbar" style={{float : "right"}}><a class="toolbar" href="#user_recipes">User Recipes</a> </li> : null}
+          {login ? <li class = "toolbar" style={{float : "right"}}><Link to='/recipelist' class="toolbar">User Recipes</Link> </li> : null}
           {login ? <li class = "toolbar" style={{float : "right"}}><Link to='/upload' class="toolbar">Upload Recipe</Link></li> : null}
           {login ? <li class = "toolbar"style={{float : "left"}}><DropdownEdit buttonText="Account Details " content = ""/></li> : null}
         </ul>
@@ -251,6 +252,10 @@ const router = createBrowserRouter([
     path: "upload",
     element: <><Toolbar/><Upload/></>
   },
+  {
+    path: "RecipeList",
+    element: <><Toolbar/><RecipeList/></>
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
