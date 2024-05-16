@@ -39,6 +39,7 @@
             border-width:2px;
             border-radius: 10px;
             width: 50rem;
+            max-height: 7%;
             cursor: pointer;
         }
 

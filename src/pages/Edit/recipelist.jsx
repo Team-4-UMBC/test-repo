@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Edit from "./edit";
 import { Table } from "./myTable"
 
 const RecipeList = () => {
@@ -41,9 +40,7 @@ const RecipeList = () => {
 
     return (
         <div>
-            <Table rows={data} deleteRow={null} editRow={null}/>
-            
-            
+            <Table rows={data}/>
         </div>
     )
     

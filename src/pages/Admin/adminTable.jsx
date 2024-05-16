@@ -1,37 +1,35 @@
 import React from "react";
 
-import "./recipelist.css";
-import DropdownDeleteRecipe from "../../components/Dropdown/DropdownDeleteRecipe";
-import DropdownTableEdit from "../../components/Dropdown/DropdownTableEdit";
+import "../Edit/recipelist.css";
+import DropdownDeleteUser from "../../components/Dropdown/DropdownDeleteUser";
 
-export const Table = ({ rows }) => {
+export const AdminTable = ({ rows }) => {
     return(
         <div className="start">         
                     <table className="table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Title</th>
-                                <th className="expand">Description</th>
+                                <th>Username</th>
+                                <th>Email</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map(recipe => (
+                            {rows.map(user => (
                                 <tr>
                                 <td>
-                                    {recipe.id}
+                                    {user.id}
                                 </td>
                                 <td>
-                                    {recipe.title}
+                                    {user.username}
                                 </td>
                                 <td className="expand">
-                                    {recipe.Description}
+                                    {user.email}
                                 </td>
                                 <td className="fit">
                                     <span className="actions">
-                                        <DropdownTableEdit buttonText="" content="" myRecipe={recipe}/>
-                                        <DropdownDeleteRecipe buttonText="" content="" recipe={recipe}/>
+                                        <DropdownDeleteUser buttonText="" content="" user={user}/>
                                     </span>
                                 </td>
                             </tr>

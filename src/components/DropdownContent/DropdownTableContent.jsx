@@ -56,7 +56,7 @@ const DropdownTableContent = ({ children, open, recipe1}) => {
                         multiline = {true} 
                     />
                 <div>
-                        <h2>Add Image:</h2>
+                        <h4>Insert New Image</h4>
                         <input 
                             type="file" 
                             className="imgInput"

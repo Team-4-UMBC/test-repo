@@ -33,6 +33,19 @@ code {
     opacity: 1;
 }
 
+.dropdown-content2{
+    position: relative;
+    z-index: 2;
+    display: none;
+    flex-direction: column;
+    align-items: left;
+    margin-top: 1rem;
+    background-color: #faf9f6;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    opacity: 1;
+}
+
 input {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
             'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -65,19 +78,23 @@ input {
     opacity: 0;
 }
 
+
 .myButton{
-    display: block;
-    color: black;
     margin: auto;
+    z-index: 2;
     text-align: center;
     padding: 10px 16px;
     text-decoration: none;
     font-weight: bold;
-    border-style: solid;
-    border-width:2px;
-    border-radius: 10px;
-    width: 75%;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
+    opacity: 1;
+}
+
+.myButton-open{
+    opacity: 1;
+    display: relative;
 }
 
 .file{
@@ -99,6 +116,11 @@ input {
 }
 
 .content-open{
+    opacity: 1;
+    display: flex;
+}
+
+.content2-open{
     opacity: 1;
     display: flex;
 }
