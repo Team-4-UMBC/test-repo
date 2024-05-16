@@ -26,9 +26,9 @@ const AdminList = () => {
      * 
      * data gets passed into Table and the Table presents 3 things:
      *  id
-     *  title
-     *  Description
-     * If you want to change any of these it will be in the myTable.jsx file
+     *  username
+     *  email
+     * If you want to change any of these it will be in the adminTable.jsx file
      * 
      * 
      */
