@@ -124,7 +124,7 @@ const DropdownEditAcct = ({children, open, username1, email1}) => {
                 .then(data1 => {
                     if (data1.status === 1){
                         setAcct({status: 0})
-                        alert("Successfully deleted account")
+                        alert("Successfully deleted account. Please close the dropdown.")
                     }
                     else {
                         alert("Failed to delete account")
@@ -142,8 +142,8 @@ const DropdownEditAcct = ({children, open, username1, email1}) => {
             ${open ? "content-open" : null}`}>
             {children} 
             <h3>Account Details</h3>
-            <p>Username: {username}</p>
-            <p>Email: {email}</p>
+            <p>Username: {username1}</p>
+            <p>Email: {email1}</p>
             <h3>Edit Account Details</h3>
             <form onSubmit={handleSubmit}>
                 <label className="input-content"> New Username: 

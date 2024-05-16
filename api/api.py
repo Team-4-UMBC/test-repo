@@ -304,10 +304,17 @@ def createUser():
 def deleteUser():
     global currentUser
     global currentEmail
-    username = request.json['username']
-    account = User.query.get(username)
-    if account != None and username == currentUser:
-        delete_user(username)
+    account = User.query.get(currentUser)
+    if Recipe.query.filter_by(user_name=currentUser) and account != None:
+        recipes = Recipe.query.filter_by(user_name=currentUser)
+        for r in recipes:
+            delete_recipe(r.id)
+        delete_user(currentUser)
+        currentUser = None
+        currentEmail = None
+        return {"status": 1}
+    elif account != None:
+        delete_user(currentUser)
         currentUser = None
         currentEmail = None
         return {"status": 1}
@@ -398,7 +405,11 @@ def editEmail():
 def displayUser():
     global currentUser
     global currentEmail
-    return {"username": currentUser, "email": currentEmail}
+    if currentUser:
+        return {"username": currentUser, "email": currentEmail, "login": True}
+    else:
+        return {"username": "", "email": "", "login": False}
+    
 
 #app route that deals with the upload of a recipe
 @app.route("/upload_recipe", methods = ['GET', 'POST'])
