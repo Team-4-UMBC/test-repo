@@ -19,17 +19,17 @@ const Upload = () => {
     function handleChange(e) {
         console.log(e.target.files);
         setFile(URL.createObjectURL(e.target.files[0]));
-        setImageData(e.target.files[0])
+        setImageData(e.target.files[0]);
         setName(e.target.files[0].name);
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const post = { title, ingredients, description, instructions, image_name };
+        const post = { title, ingredients, description, instructions, image_name, imageData };
         const formData = new FormData();
-        if(imageData) {
-            formData.append('image_name', image_name);
-            formData.append('imageData', imageData, image_name);
+        if(post.imageData) {
+            formData.append('image_name', post.image_name);
+            formData.append('imageData', post.imageData, post.image_name);
         }
         /**
          * Same as before, title, ingredients, and instructions are REQUIRED, description and file are OPTIONAL
@@ -61,7 +61,7 @@ const Upload = () => {
             alert("Recipe upload failed. Make sure all necessary fields are filled.")
         }
 
-        if(formData.imageData) {
+        if(post.imageData) {
             fetch('http://localhost:5000/upload_image', {
                 method: 'POST',
                 body: formData,
