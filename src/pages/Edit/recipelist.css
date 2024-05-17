@@ -9,7 +9,7 @@
   
   .table {
     display: block;
-    overflow: hidden;
+    overflow: scroll;
     table-layout: fixed;
     border-collapse: collapse;
     box-shadow: 0px 10px 10px #ccc;

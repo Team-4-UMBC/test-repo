@@ -1,5 +1,4 @@
 import React from "react";
-
 import "./recipelist.css";
 import DropdownDeleteRecipe from "../../components/Dropdown/DropdownDeleteRecipe";
 import DropdownTableEdit from "../../components/Dropdown/DropdownTableEdit";
@@ -17,28 +16,35 @@ export const Table = ({ rows }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map(recipe => (
+                            {(typeof rows.recipes == 'undefined') ? (
                                 <tr>
-                                <td>
+                                <td>No recipes</td>
+                                </tr>
+                            ) : (
+                                rows.recipes.map((recipe, i) => (
+                                <tr>
+                                <td key={i}>
                                     {recipe.id}
                                 </td>
-                                <td>
+                                <td key={i}>
                                     {recipe.title}
                                 </td>
-                                <td className="expand">
-                                    {recipe.Description}
+                                <td className="expand" key={i}>
+                                    {recipe.description}
                                 </td>
-                                <td className="fit">
+                                <td className="fit" key={i}>
                                     <span className="actions">
                                         <DropdownTableEdit buttonText="" content="" myRecipe={recipe}/>
                                         <DropdownDeleteRecipe buttonText="" content="" recipe={recipe}/>
                                     </span>
                                 </td>
                             </tr>
-                            ))} 
+                            )))}
                         </tbody>
                     </table>
                     
             </div>  
     )
 }
+
+export default Table;

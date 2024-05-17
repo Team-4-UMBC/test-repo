@@ -1,52 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table } from "./myTable"
 
-const RecipeList = () => {
+export const RecipeList = () => {
+    const [recipes, setRecipes] = useState({recipes: []});
 
-    const sample = [
-        {
-            "id": 1,
-            "title": "Chicken",
-            "Description": "My Chicken Recipe",
-            "author": "Thomas",
-            "Ingredients": "Eggs, Chicken",
-            "Instructions": "Cook for 20 minutes",
-            "Image": "some Image"
-        },
-        {
-            "id": 2,
-            "title": "Beef",
-            "Description": "My Beef Recipe",
-            "author": "Michael",
-            "Ingredients": "Eggs, Beef",
-            "Instructions": "Cook for 5 hours",
-            "Image": "another Image"
-        }
-    ]
+    function FetchData() {
+        useEffect(() => {
+            fetch("/user_recipes").then((res) => 
+            res.json().then((data) => {
+                    setRecipes({
+                        recipes: data.recipes
+                    })
+                })
+            );
+        }, []);
+    }
 
-    const [data, setData] = useState(sample);
-    /**
-     * INSERT API CALLS HERE
-     * Look at how sample array is used to see what I think is presented.
-     * 
-     * data gets passed into Table and the Table presents 3 things:
-     *  id
-     *  title
-     *  Description
-     * If you want to change any of these it will be in the myTable.jsx file
-     * 
-     * 
-     */
-
+    FetchData();
+    
     return (
         <div>
-            <Table rows={data}/>
+            <Table rows={recipes}/>
         </div>
     )
     
 }
-
-
 
 
 export default RecipeList;
