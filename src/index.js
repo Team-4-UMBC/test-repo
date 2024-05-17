@@ -29,6 +29,7 @@ export function Toolbar() {
     setOpen((open) => !open);
     return fetch('http://localhost:5000/status', {
             method: 'GET',
+            mode: 'cors',
             headers: {
             'Content-Type': 'application/json'
             }
@@ -56,9 +57,10 @@ export function Toolbar() {
     );
   };
 
-  const logout = async () => {
+  const logout = () => {
     return fetch('http://localhost:5000/logout', {
             method: 'GET',
+            mode: 'cors',
             headers: {
             'Content-Type': 'application/json'
             }
@@ -74,13 +76,13 @@ export function Toolbar() {
   //three text boxes and a button
     return (
         <ul class = "Toolbar">
-          {!login ? <li class = "toolbar"style={{float : "right"}}><Dropdown buttonText="Log In " content = "" click={handleLogin} open={open}/></li> : null}
-          {login ? <li class = "toolbar" style={{float : "left"}}><a class="toolbar" href="/" onClick={logout}>Log Out</a> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
+          {login == 0 ? <li class = "toolbar"style={{float : "right"}}><Dropdown buttonText="Log In " content = "" click={handleLogin} open={open}/></li> : null}
+          {login >= 1 ? <li class = "toolbar" style={{float : "left"}}><a class="toolbar" href="/" onClick={logout}>Log Out</a> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
           <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth : 0, float : "" }}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}}/></a></li>
-          {login ? <li class = "toolbar" style={{float : "right"}}><Link to='/recipelist' class="toolbar">User Recipes</Link> </li> : null}
-          {login ? <li class = "toolbar" style={{float : "right"}}><Link to='/upload' class="toolbar">Upload Recipe</Link></li> : null}
-          {login ? <li class = "toolbar" style={{float : "right"}}><Link to='/AdminList' class="toolbar">Admin List</Link></li> : null}
-          {login ? <li class = "toolbar"style={{float : "left"}}><DropdownEdit buttonText="Account Details " content = "" click={handleAccount} open={open2} username={username} email={email}/></li> : null}
+          {login >= 1 ? <li class = "toolbar" style={{float : "right"}}><Link to='/recipelist' class="toolbar" >User Recipes</Link> </li> : null}
+          {login >= 1 ? <li class = "toolbar" style={{float : "right"}}><Link to='/upload' class="toolbar">Upload Recipe</Link></li> : null}
+          {login == 2 ? <li class = "toolbar" style={{float : "right"}}><Link to='/AdminList' class="toolbar">Admin List</Link></li> : null}
+          {login >= 1 ? <li class = "toolbar"style={{float : "left"}}><DropdownEdit buttonText="Account Details " content = "" click={handleAccount} open={open2} username={username} email={email}/></li> : null}
         </ul>
     );
 }
@@ -285,4 +287,3 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(<RouterProvider router={router} />);
-
