@@ -9,22 +9,23 @@ export const AdminTable = ({ rows }) => {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {rows.map(user => (
+                            {(typeof rows.users == 'undefined') ? (
                                 <tr>
-                                <td>
-                                    {user.id}
-                                </td>
-                                <td>
+                                <td>No users</td>
+                                </tr>
+                            ) : (
+                                rows.users.map((user, i) => (
+                                <tr>
+                                <td key={i}>
                                     {user.username}
                                 </td>
-                                <td className="expand">
+                                <td className="expand" key={i}>
                                     {user.email}
                                 </td>
                                 <td className="fit">
@@ -33,7 +34,7 @@ export const AdminTable = ({ rows }) => {
                                     </span>
                                 </td>
                             </tr>
-                            ))} 
+                            )))} 
                         </tbody>
                     </table>
                     
