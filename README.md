@@ -81,21 +81,22 @@ You will need to download the dataset's archive folder and unzip it before runni
     `pip install cryptography`
    
     etc.
+   
     Then, retry running the command: `flask run`
     This may take awhile the first time because the database gets automatically populated.
 11. Open a DIFFERENT terminal and navigate to the test-repo folder.
 12. Enter the command: `npm ci`
 13. Search for the webpack.config.js file in your file system and open the file. If it is not already 
     in the file, add this code under "rules" and save it:
-`{`
-     `test: /\.(jpg|png|svg)$/,`
-     `loader: 'file-loader',`
-     `options: {`
-     `name: '[path][name].[hash].[ext]',`
-     `},`
-`}`
+`{
+     test: /\.(jpg|png|svg)$/,
+     loader: 'file-loader',
+     options: {
+     name: '[path][name].[hash].[ext]',
+     },
+}`
 
-14. Enter the command: `npm start`
+15. Enter the command: `npm start`
     If this doesn't work, try this command: `npm install react-router-dom`
     and then retry: `npm start`
     The web app should automatically open into the web browser.
