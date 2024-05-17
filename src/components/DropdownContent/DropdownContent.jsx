@@ -34,7 +34,7 @@ const DropdownContent = ({children, open}) => {
         })
         .then(response => response.json())
         .then(data1 => {
-            if (data1.status === true){
+            if (data1.status === 1 || data1.status === 2){
                 setLogin(data1.status)
                 alert("Login successful. Please close the dropdown.");
             }
@@ -51,7 +51,7 @@ const DropdownContent = ({children, open}) => {
             ${open ? "content-open" : null}`}>
             {children} 
             <form onSubmit={handleSubmit}>
-                <label className="input-content"> Username: 
+                <label className="input-content1"> Username: 
                         <input 
                             type="text"
                             required
@@ -59,7 +59,7 @@ const DropdownContent = ({children, open}) => {
                             onChange={(e) => setUsername(e.target.value)}
                             />
                     </label>
-                <label className="input-content">
+                <label className="input-content1">
                     Password: 
                         <TextInput 
                             type="text"

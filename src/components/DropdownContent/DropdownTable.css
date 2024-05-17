@@ -12,8 +12,9 @@ code {
 }
 
 
-.dropdown-content{
+.dropdown-content1{
     position: relative;
+    right:0;
     z-index: 2;
     min-width: 10%;
     display: none;
@@ -34,7 +35,7 @@ code {
 }
 
 .dropdown-content2{
-    position: relative;
+    position: fixed;
     z-index: 2;
     display: none;
     flex-direction: column;

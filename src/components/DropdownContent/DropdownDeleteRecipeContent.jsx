@@ -3,9 +3,6 @@ import { useState } from "react";
 
 const DropdownDeleteUserContent = ({ children, open, recipe1 }) => {
 
-    //For storing the recipe and Recipe ID in case you need them
-    const [recipe, setRecipe] = useState(recipe1);
-    const [recipeId, setRecipeId] = useState(recipe.id);
 
 
     /**
@@ -14,15 +11,29 @@ const DropdownDeleteUserContent = ({ children, open, recipe1 }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        return fetch('http://localhost:5000/delete_recipe', {
+        method: 'POST',
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': "application/json"
+        }, body: JSON.stringify(recipe1),
+        })
+        .then(response => response.json())
+            .then(data1 => {
+                if (data1.status === 1){
+                    alert("Recipe deleted")
+                }
+                else {
+                    alert("Failed to delete recipe")
+                }
+            })
     }
 
     return (
         <div className={`dropdown-content2
         ${open ? "content-open" : null}`}>
         {children}
-            <form onSubmit={handleSubmit}>
-                <button type="submit" className="myButton">Delete</button>
-            </form>
+            <button type="submit" className="myButton" onClick={handleSubmit}>Delete</button>
 
         </div>
     )

@@ -14,9 +14,8 @@ code {
 
 .dropdown-content{
     position: fixed;
-    z-index: 2;
+    z-index: 1;
     min-width: 10%;
-    max-width: 100%;
     display: none;
     flex-direction: column;
     align-items: left;
@@ -30,7 +29,7 @@ code {
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    opacity: 1;
+    opacity: 0;
 }
 
 .dropdown-contentLog{
@@ -54,7 +53,7 @@ code {
     opacity: 0;
 }
 
-.input-content{
+.input-content1{
     min-width: 10%;
     display: block;
     align-items: left;
