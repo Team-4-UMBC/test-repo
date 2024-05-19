@@ -162,7 +162,9 @@ def addToEs():
 addToEs()
 
 def insert_user(username1, password1, email1, privilege1):
-    hashedPass = sha256(password1.encode('utf-8')).hexdigest()
+    hashedPass = password1
+    if User.query.filter_by(password=hashedPass).first() == None:
+        hashedPass = sha256(password1.encode('utf-8')).hexdigest()
     if username1 == None:
         user = User(password=hashedPass, email=email1, privilege=privilege1)
     else:
@@ -175,15 +177,16 @@ def delete_user(username1):
     db.session.commit()
 
 def update_username(username1, username2):
-    if Recipe.query.filter_by(user_name=username1):
+    if Recipe.query.filter_by(user_name=username1).first() != None:
         insert_user(username2, User.query.filter_by(username=username1).first().password, User.query.filter_by(username=username1).first().email, User.query.filter_by(username=username1).first().privilege)
         recipes = Recipe.query.filter_by(user_name=username1)
         for r in recipes:
             r.user_name = username2
+        delete_user(username1)
         db.session.commit()
     else:
-        user = User.query.filter_by(username=username1).first()
-        user.username = username2
+        insert_user(username2, User.query.filter_by(username=username1).first().password, User.query.filter_by(username=username1).first().email, User.query.filter_by(username=username1).first().privilege)
+        delete_user(username1)
         db.session.commit()
 
 def update_password(username1, password2):
@@ -223,8 +226,9 @@ def delete_image(image_name1):
 def delete_recipe(id1):
     recipe = Recipe.query.filter_by(id=id1).first()
     image = recipe.image_name
-    recipe.image_name = None
-    Image.query.get(image).delete()
+    if image != None:
+        recipe.image_name = None
+        Image.query.filter_by(image_name=image).delete()
     Recipe.query.filter_by(id=id1).delete()
     db.session.commit()
 
@@ -355,11 +359,10 @@ def login():
     return {"status": 0}
 
 #app route that determines whether or not a user is logged in
-@app.route("/status", methods = ['GET', 'POST'])
+@app.route("/status", methods = ['GET'])
 @cross_origin(supports_creditals=True, origin="*")
 def status():
     global currentUser
-    print(currentUser)
     if currentUser != None and User.query.get(currentUser).privilege == 1:
         return {"login": 2}
     elif currentUser != None:
@@ -376,7 +379,6 @@ def logout():
     if currentUser:
         currentUser = None
         currentEmail = None
-    print(currentUser)
     return {"status": 0}
 
 #app route that deals with editing a user's username
@@ -384,7 +386,6 @@ def logout():
 @cross_origin(supports_creditals=True, origin="*")
 def editUsername():
     global currentUser
-    print(currentUser)
     username = request.json['newUsername']
     if currentUser != None and User.query.get(username) == None and User.query.get(currentUser) != None:
         update_username(currentUser, username)

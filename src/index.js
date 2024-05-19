@@ -39,6 +39,23 @@ export function Toolbar() {
                 setLogin(data.login);
             })
         );
+        
+  }
+
+  const getStatus = async () => {
+    return fetch('http://localhost:5000/status', {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+            'Content-Type': 'application/json'
+            }
+        })
+        .then((res) => 
+            res.json().then((data) => {
+                setLogin(data.login);
+            })
+        );
+        
   }
 
   const handleAccount = async () => {
@@ -77,8 +94,8 @@ export function Toolbar() {
     return (
         <ul class = "Toolbar">
           {login == 0 ? <li class = "toolbar"style={{float : "right"}}><Dropdown buttonText="Log In " content = "" click={handleLogin} open={open}/></li> : null}
-          {login >= 1 ? <li class = "toolbar" style={{float : "left"}}><a class="toolbar" href="/" onClick={logout}>Log Out</a> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
-          <li class = "toolbar"><a href="/" style={{padding : 0,borderWidth : 0, float : "" }}> <img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}}/></a></li>
+          {login >= 1 ? <li class = "toolbar" style={{float : "left"}}><Link to='/' class="toolbar" onClick={logout}>Log Out</Link> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
+          <li class = "toolbar" style={{padding : 0,borderWidth : 0, float : "" }}><Link to='/' class="toolbar" onClick={getStatus}><img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}} /></Link></li>
           {login >= 1 ? <li class = "toolbar" style={{float : "right"}}><Link to='/recipelist' class="toolbar" >User Recipes</Link> </li> : null}
           {login >= 1 ? <li class = "toolbar" style={{float : "right"}}><Link to='/upload' class="toolbar">Upload Recipe</Link></li> : null}
           {login == 2 ? <li class = "toolbar" style={{float : "right"}}><Link to='/AdminList' class="toolbar">Admin List</Link></li> : null}
