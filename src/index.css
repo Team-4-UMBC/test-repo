@@ -136,9 +136,7 @@ div.search {
   height: 169px;
   margin: auto;
   border-width:2px;
-  position: relative;
   text-align: center;
-  
 }
 
 input.searchbar{
@@ -149,23 +147,27 @@ input.searchbar{
   border-right: 1px solid #636466;
   border-radius: 4px;
   font-size: 17px;
+  margin-left: -3vw;
   background-image: url('search.png');
   background-position: 10px 10px;
   background-repeat: no-repeat;
   background-size: 17px;
 }
 
-.coolbutton{
+input.coolbutton{
   color:black;
   font-weight: bold;
-  background-color: #fdb515; 
-  width: 1px;
+  background-color: #fdb515;
+  max-width: 80px; 
+  min-width: 80px;
+  width: 80px;
   height: 40px;
   border-radius: 4px;
   border: 2px solid #636466;
   border-left:1px solid #636466;
   font-size: 17px;
-  position: relative;
+  display: inline-block;
+  position: absolute;
 }
 
 .coolbutton:hover{

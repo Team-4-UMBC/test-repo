@@ -95,7 +95,7 @@ export function Toolbar() {
         <ul class = "Toolbar">
           {login == 0 ? <li class = "toolbar"style={{float : "right"}}><Dropdown buttonText="Log In " content = "" click={handleLogin} open={open}/></li> : null}
           {login >= 1 ? <li class = "toolbar" style={{float : "left"}}><Link to='/' class="toolbar" onClick={logout}>Log Out</Link> </li> : <li class = "toolbar"style={{float : "left"}}><DropdownCreate buttonText="Sign Up " content = ""/></li> }
-          <li class = "toolbar" style={{padding : 0,borderWidth : 0, float : "" }}><Link to='/' class="toolbar" onClick={getStatus}><img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}} /></Link></li>
+          <li class = "toolbar" style={{padding : 0,borderWidth : 0, float : "" , marginLeft:"-4vw"}}><Link to='/' onClick={getStatus}><img src={require('./Logo.png')} alt="RecipeRetrieverLogo" style={{width:"443", height:"50",marginRight:-50}} /></Link></li>
           {login >= 1 ? <li class = "toolbar" style={{float : "right"}}><Link to='/recipelist' class="toolbar" >User Recipes</Link> </li> : null}
           {login >= 1 ? <li class = "toolbar" style={{float : "right"}}><Link to='/upload' class="toolbar">Upload Recipe</Link></li> : null}
           {login == 2 ? <li class = "toolbar" style={{float : "right"}}><Link to='/AdminList' class="toolbar">Admin List</Link></li> : null}
@@ -220,7 +220,7 @@ export function SearchBar() {
       <label>
         <input class = "searchbar" type="text" id = "RecipeSearch"/>
       </label>
-      <input class="coolbutton" type="submit" value="Search" />
+      <input class="coolbutton" type="submit" value="Search"/>
     </form>
     {(typeof state.recipes == 'undefined') ? (
         <p>Loading...</p>

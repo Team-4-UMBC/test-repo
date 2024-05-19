@@ -50,19 +50,21 @@ const DropdownCreateContent = ({children, open}) => {
             ${open ? "content-open" : null}`}>
             {children} 
             <form onSubmit={handleSubmit}>
-                <label className="input-content"> Username: 
-                         <input 
+                <label className="input-content"> 
+                <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Username</div> 
+                         <TextInput 
                             type="text"
                             required
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             />
                     </label>
                 <label className="input-content">
-                    Password: 
+                <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Password</div>
                         <TextInput 
                             type="text"
-                            style={{borderColor: 'gray', borderWidth: 1}}
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             secureTextEntry={true}
                             required
                             value={password}
@@ -70,16 +72,17 @@ const DropdownCreateContent = ({children, open}) => {
                             />
                     </label>
                 <label className="input-content">
-                    Email:
-                        <input 
+                <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Email</div>
+                        <TextInput 
                             type="text"
                             required
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             />
                     </label>
                 <br/>
-                <button type="submit">Create Account
+                <button class="submitButton" type="submit">Create Account
                 </button>
             </form>
         </div>

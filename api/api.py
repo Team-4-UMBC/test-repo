@@ -28,11 +28,11 @@ es = Elasticsearch(['https://localhost:9200'], verify_certs=False, basic_auth=(u
 
 #database set up
 engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306')
-statement1 = text("CREATE DATABASE IF NOT EXISTS website1;")
+statement1 = text("CREATE DATABASE IF NOT EXISTS website;")
 with engine.connect() as conn:
     conn.execute(statement1)
 engine.dispose()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.0.0.1:3306/website1'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.0.0.1:3306/website'
 db = SQLAlchemy(app)
 app.app_context().push() 
 
@@ -87,7 +87,7 @@ db.session.commit()
 
 #checks if the user table is empty
 userExists = True
-engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM user;"))
     if '(0,)' in str(set(result)):
@@ -95,13 +95,13 @@ with engine.connect() as conn:
 
 #populates the user table with an admin if it is empty
 if userExists == False:
-    user = User(username="admin", password="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", email="website1owner@gmail.com", privilege=1)
+    user = User(username="admin", password="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", email="websiteowner@gmail.com", privilege=1)
     db.session.add(user)
     db.session.commit()
 
 #checks if the image table is empty
 imageExists = True
-engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM image;"))
     if '(0,)' in str(set(result)):
@@ -121,7 +121,7 @@ engine.dispose()
 
 #checks if the recipe table is empty
 recipeExists = True
-engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1')
+engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website')
 with engine.connect() as conn:
     result = conn.execute(text("SELECT COUNT(*) FROM recipe;"))
     if '(0,)' in str(set(result)):
@@ -131,7 +131,7 @@ engine.dispose()
 
 #populates the recipe table with recipes from the dataset if it is empty
 if recipeExists == False:
-    engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website1?local_infile=1')
+    engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306/website?local_infile=1')
     with engine.connect() as conn:
         #REPLACE FILE PATH WITH YOUR FILE PATH TO recipe.csv
         result = conn.execute(text("LOAD DATA LOCAL INFILE '/Users/miche/Documents/Spring 24/Cmsc 447/test-repo/api/recipe.csv' INTO TABLE recipe FIELDS TERMINATED BY ',' ENCLOSED BY '`' LINES TERMINATED BY '\n';"))

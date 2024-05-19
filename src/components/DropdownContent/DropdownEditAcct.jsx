@@ -139,26 +139,29 @@ const DropdownEditAcct = ({children, open, username1, email1}) => {
 
         //This div collects the inputs.
         <div className={`dropdown-content 
-            ${open ? "content-open" : null}`}>
+            ${open ? "content-open" : null}`} style={{height:"50vh"}}>
             {children} 
-            <h3>Account Details</h3>
+            <h3 style={{textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Account Details</h3>
             <p>Username: {username1}</p>
             <p>Email: {email1}</p>
-            <h3>Edit Account Details</h3>
+            <hr style={{width:"80%"}}></hr>
+            <h3 style={{textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Edit Account Details</h3>
             <form onSubmit={handleSubmit}>
-                <label className="input-content"> New Username: 
-                        <input 
+                <label className="input-content">
+                <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>New Username</div> 
+                        <TextInput 
                             type="text"
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             required
                             value={newUsername}
                             onChange={(e) => setNewUsername(e.target.value)}
                             />
                 </label>
                 <label className="input-content">
-                    New Password: 
+                <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>New Password</div> 
                         <TextInput 
                             type="text"
-                            style={{borderColor: 'gray', borderWidth: 1}}
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             secureTextEntry={true}
                             required
                             value={newPassword}
@@ -166,19 +169,20 @@ const DropdownEditAcct = ({children, open, username1, email1}) => {
                             />
                     </label>
                     <label className="input-content">
-                        New Email:
-                        <input 
+                    <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>New Email</div>
+                        <TextInput 
                             type="text"
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             required
                             value={newEmail}
                             onChange={(e) => setNewEmail(e.target.value)}
                             />
                     </label>
                 <br/>
-                <button onClick={handleSubmit}>Edit account
+                <button class="submitButton" onClick={handleSubmit}>Edit account
                 </button>
             </form>
-            <button onClick={handleSubmit2}>Delete account
+            <button class="submitButton" onClick={handleSubmit2}>Delete account
             </button>
         </div>
     );

@@ -51,19 +51,22 @@ const DropdownContent = ({children, open}) => {
             ${open ? "content-open" : null}`}>
             {children} 
             <form onSubmit={handleSubmit}>
-                <label className="input-content1"> Username: 
-                        <input 
+                <label className="input-content1"> 
+                <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Username</div> 
+                        <TextInput 
                             type="text"
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             required
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             />
                     </label>
+                    <div style={{marginBottom:"10px"}}></div>
                 <label className="input-content1">
-                    Password: 
+                    <div style={{fontSize:14,fontWeight: "bold", textDecoration:"underline solid #fdb515 2px",textDecorationColor:"#fdb515"}}>Password</div>
                         <TextInput 
                             type="text"
-                            style={{borderColor: 'gray', borderWidth: 1}}
+                            style={{borderColor: 'gray', borderWidth: 1,display:"block",maxWidth:"100%",minWidth:"100%"}}
                             secureTextEntry={true}
                             required
                             value={password}
@@ -71,7 +74,7 @@ const DropdownContent = ({children, open}) => {
                             />
                     </label>
                 <br/>
-                <button type="submit">Log In
+                <button class="submitButton" type="submit">Log In
                 </button>
             </form>
         </div>
