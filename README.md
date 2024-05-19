@@ -102,3 +102,28 @@ You will need to download the dataset's archive folder and unzip it before runni
     The web app should automatically open into the web browser.
     If it doesn't, you can type http://localhost:3000 into the web browser instead.
 
+## Troubleshooting the recipe dataset
+
+As a very last resort, if the recipe dataset does not populate the database properly, then perform these steps.
+
+Go into recipe.csv using notepad and perform these “find and replace” operations:
+
+Find: \`[
+Replace: “`[
+
+Find: ]\`,
+Replace: ]`”,
+
+Find: ]\`”,\`
+Replace: ]\`”,”\`
+
+Find: 4/16/2024 11:30
+Replace: 2024-04-16 11:30:00
+
+Then go into notepad++ and open the recipe.csv file. Perform one final “find and replace” operation. 
+
+Find: \`\r\n
+Replace: `”\r\n
+In search mode, click the extended option.
+
+
