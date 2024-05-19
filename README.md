@@ -48,15 +48,17 @@ You will need to download the dataset's archive folder and unzip it before runni
         Type "services.msc"
         Search for the mySQL service
         Click on start
-2. Open a terminal, navigate to your elastic search bin folder, and run elastic search. 
-3. Clone the repo. Open a terminal and navigate to the test-repo folder, then to the api folder.
-4. Inside that folder, run the command: `venv\Scripts\activate`
+2. Download elastic search from the elastic search website.
+   Unzip the folder. In the powershell/terminal, cd into the folder and run
+   `.\bin\elasticsearch`. You also need to pip install elasticsearch.
+4. Clone the repo. Open a terminal and navigate to the test-repo folder, then to the api folder.
+5. Inside that folder, run the command: `venv\Scripts\activate`
     Note: you may have to use a different command if you are not using windows. 
     If that doesn’t work, delete the current venv and do this command: `python -m venv venv`
     Then try `venv\Scripts\activate` again.
-5. Check to make sure you have the recipe.csv file in the api directory. DO NOT OPEN THE 
+6. Check to make sure you have the recipe.csv file in the api directory. DO NOT OPEN THE 
     FILE. Opening the file will change the formatting. If it opens, delete it and redownload it again. 
-6. You will need to copy the Food Images directory (test-repo/src/archive/Food Images) into this  
+7. You will need to copy the Food Images directory (test-repo/src/archive/Food Images) into this  
     folder for Windows: `C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/`
     For windows, you can do this command in the terminal:
    `xcopy yourfilepathtoFoodImagesDirectory C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/ /s /e /h`
