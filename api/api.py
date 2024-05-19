@@ -24,7 +24,7 @@ app.config['SECRET_KEY'] = '85533925b02f5917db2256d316b3b314'
 #search set up
 usrname = "elastic"
 passwd = "123456"
-es = Elasticsearch(['https://localhost:9200'], verify_certs=False, http_auth=(usrname, passwd))
+es = Elasticsearch(['https://localhost:9200'], verify_certs=False, basic_auth=(usrname, passwd))
 
 #database set up
 engine = create_engine('mysql+pymysql://root:password@127.0.0.1:3306')
@@ -199,8 +199,15 @@ def update_email(username1, email2):
 
 def insert_recipe(title1, description1, upload_date1, revised_date1, image_name1, user_name1, ingredients1, instructions1):
     recipe = Recipe(title=title1, description=description1, ingredients=ingredients1, instructions=instructions1, upload_date=upload_date1, revised_date=revised_date1, image_name=image_name1, user_name=user_name1)
+    
     db.session.add(recipe)
+    
     db.session.commit()
+    if not es.exists(index=index_name,id=recipe.id):
+                if isinstance(recipe.upload_date,str) == False:
+                    es.index(index=index_name, id=recipe.id, body= {'ingredients': recipe.ingredients, 'instructions': recipe.instructions, 'upload_date': recipe.upload_date, 'revised_date': recipe.revised_date, 'title': recipe.title, 'description': recipe.description, 'user_name': recipe.user_name, 'image_name': recipe.image_name})
+                else:
+                    print(recipe)
 
 def insert_image(image_name1, image_data1):
     if image_name1 != None:
